@@ -1,0 +1,10 @@
+{
+    "baseUrl": "http://some_random.domain/",
+    "modules": {
+        "root": [
+            "./r1.js",
+            "./r2.js"
+        ],
+        "single": ["./r3.js"]
+    }
+}

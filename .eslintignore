@@ -1,0 +1,2 @@
+src/compiler/legacy/**/*.js
+test/server/data/test-suite/**/*.js
