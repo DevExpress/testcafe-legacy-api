@@ -10,8 +10,8 @@ describe('Legacy compiler adapter', function () {
         var nativeRequireAnalyzerRun = RequireAnalyzer.run;
 
         var sources = [
-            path.resolve('test/server/data/test-suite/require1.test.js'),
-            path.resolve('test/server/data/test-suite/require2.test.js')
+            path.resolve('test/server/data/adapter-test-suite/require1.test.js'),
+            path.resolve('test/server/data/adapter-test-suite/require2.test.js')
         ];
 
         RequireAnalyzer.run = function () {
@@ -29,7 +29,7 @@ describe('Legacy compiler adapter', function () {
     });
 
     it('Should provide errors for the legacy compiler', function () {
-        var compiler = new CompilerAdapter(['test/server/data/test-suite/broken.test.js']);
+        var compiler = new CompilerAdapter(['test/server/data/adapter-test-suite/broken.test.js']);
 
         return compiler
             .getTests()

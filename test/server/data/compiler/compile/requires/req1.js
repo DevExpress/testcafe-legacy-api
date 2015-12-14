@@ -1,0 +1,1 @@
+alert('require1 loaded');

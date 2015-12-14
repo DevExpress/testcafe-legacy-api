@@ -1,0 +1,1 @@
+__set$(window, "location", "http://example.com");

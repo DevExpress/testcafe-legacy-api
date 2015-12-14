@@ -25,14 +25,14 @@
     "babel-eslint": "^4.0.10",
     "chai": "^3.4.1",
     "del": "^1.2.0",
-    "eslint": "^1.10.3",
     "eslint-plugin-babel": "^2.2.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
     "gulp-eslint": "^1.1.1",
     "gulp-ll": "^1.0.1",
     "gulp-mocha": "^2.2.0",
-    "publish-please": "^1.1.0"
+    "publish-please": "^1.1.0",
+    "read-file-relative": "^1.2.0"
   },
   "dependencies": {
     "async": "0.2.6",

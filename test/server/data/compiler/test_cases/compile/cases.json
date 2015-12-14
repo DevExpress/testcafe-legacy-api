@@ -1,0 +1,11 @@
+[
+    {
+        "@name": "OneMoreCase",
+        "pass": "#2123"
+    },
+    {
+       "@name": "And more",
+        "pass": "#2123",
+        "nick": "yo"
+    }
+]

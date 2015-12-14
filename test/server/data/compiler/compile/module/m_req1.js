@@ -1,0 +1,1 @@
+alert('Module require1 loaded');
