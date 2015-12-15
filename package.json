@@ -1,6 +1,6 @@
 {
   "name": "testcafe-legacy-api",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "Legacy API support for TestCafe",
   "main": "lib/index.js",
   "scripts": {
@@ -42,5 +42,8 @@
     "pify": "^2.3.0",
     "pinkie": "^2.0.1",
     "uglify-js": "1.2.6"
-  }
+  },
+  "files": [
+    "lib"
+  ]
 }
