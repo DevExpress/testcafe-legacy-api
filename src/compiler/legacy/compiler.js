@@ -4,11 +4,9 @@ var path = require('path'),
     javascriptParser = require('uglify-js').parser,
     async = require('async'),
     Common = require('./common'),
-    Hammerhead = require('testcafe-hammerhead'),
     Ast = require('./ast'),
     CallAnalyzer = require('./analysis/call_analyzer'),
     StepsAnalyzer = require('./analysis/steps_analyzer'),
-    RequireAnalyzer = require('./analysis/require_analyzer'),
     ErrCodes = require('./err_codes'),
     readSourceFile = require('../../utils/read-source-file');
 
@@ -21,8 +19,9 @@ function multySplice(arr, index, deleteCount, itemsToInsert) {
 }
 
 //Compiler
-var Compiler = module.exports = function (filename, modules, requireReader, sourceIndex) {
+var Compiler = module.exports = function (filename, modules, requireReader, sourceIndex, hammerheadProcessScript) {
     this.walker = astProcessor.ast_walker();
+    this.hammerheadProcessScript = hammerheadProcessScript;
 
     this.filename = filename;
     this.src = null;
@@ -174,7 +173,7 @@ Compiler.prototype._getRemainderCode = function (ast) {
         if (this.ok) {
             var remainderCode = astProcessor.gen_code(remainderAst, {beautify: true});
 
-            return Hammerhead.wrapDomAccessors(remainderCode, true);
+            return this.hammerheadProcessScript(remainderCode, true);
         }
     }
 
@@ -340,7 +339,7 @@ Compiler.prototype._addOutputTestStepData = function (testName, testStepData) {
 
     this.out.testsStepData[testName] = {
         names: testStepData.names,
-        js: Hammerhead.wrapDomAccessors(js, true)
+        js: this.hammerheadProcessScript(js, true)
     };
 };
 

@@ -14,7 +14,7 @@ function exists (filePath) {
 }
 
 export default class CompilerAdapter {
-    constructor (sources) {
+    constructor (sources, hammerheadProcessScript) {
         this.sources = sources;
 
         this.cache = {
@@ -24,7 +24,8 @@ export default class CompilerAdapter {
             configs:      {}
         };
 
-        this.requireReader = new RequireReader(this.cache.requires);
+        this.hammerheadProcessScript = hammerheadProcessScript;
+        this.requireReader           = new RequireReader(this.cache.requires, this.hammerheadProcessScript);
     }
 
     static _resolveConfigModules (cfg, dirName) {
@@ -119,7 +120,7 @@ export default class CompilerAdapter {
 
     _createLegacyCompilerPromise (filePath, modules) {
         return new Promise((resolve, reject) => {
-            var legacyCompiler = new LegacyCompiler(filePath, modules, this.requireReader, this.cache.sourceIndex);
+            var legacyCompiler = new LegacyCompiler(filePath, modules, this.requireReader, this.cache.sourceIndex, this.hammerheadProcessScript);
 
             legacyCompiler.compile((errs, out) => {
                 if (errs) {

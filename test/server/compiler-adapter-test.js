@@ -1,7 +1,8 @@
-var expect          = require('chai').expect;
-var path            = require('path');
-var CompilerAdapter = require('../../lib').Compiler;
-var RequireAnalyzer = require('../../lib/compiler/legacy/analysis/require_analyzer');
+var expect                  = require('chai').expect;
+var path                    = require('path');
+var hammerheadProcessScript = require('testcafe-hammerhead').wrapDomAccessors;
+var CompilerAdapter         = require('../../lib').Compiler;
+var RequireAnalyzer         = require('../../lib/compiler/legacy/analysis/require_analyzer');
 
 
 describe('Legacy compiler adapter', function () {
@@ -19,7 +20,7 @@ describe('Legacy compiler adapter', function () {
             nativeRequireAnalyzerRun.apply(this, arguments);
         };
 
-        var compiler = new CompilerAdapter(sources);
+        var compiler = new CompilerAdapter(sources, hammerheadProcessScript);
 
         return compiler
             .getTests()
@@ -29,7 +30,7 @@ describe('Legacy compiler adapter', function () {
     });
 
     it('Should provide errors for the legacy compiler', function () {
-        var compiler = new CompilerAdapter(['test/server/data/adapter-test-suite/broken.test.js']);
+        var compiler = new CompilerAdapter(['test/server/data/adapter-test-suite/broken.test.js'], hammerheadProcessScript);
 
         return compiler
             .getTests()

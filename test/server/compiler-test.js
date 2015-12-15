@@ -1,16 +1,17 @@
-var expect        = require('chai').expect;
-var read          = require('read-file-relative').readSync;
-var Promise       = require('pinkie');
-var Compiler      = require('../../lib/compiler/legacy/compiler');
-var RequireReader = require('../../lib/compiler/require-reader');
-var ERR_CODE      = require('../../lib/compiler/legacy/err_codes');
+var expect                  = require('chai').expect;
+var read                    = require('read-file-relative').readSync;
+var Promise                 = require('pinkie');
+var hammerheadProcessScript = require('testcafe-hammerhead').wrapDomAccessors;
+var Compiler                = require('../../lib/compiler/legacy/compiler');
+var RequireReader           = require('../../lib/compiler/require-reader');
+var ERR_CODE                = require('../../lib/compiler/legacy/err_codes');
 
 
 function compile (filename, opts) {
     opts = opts || {};
 
-    var requireReader = new RequireReader(opts.requiresDescriptorCache);
-    var compiler      = new Compiler(filename, opts.modules, requireReader, opts.sourceIndex);
+    var requireReader = new RequireReader(opts.requiresDescriptorCache, hammerheadProcessScript);
+    var compiler      = new Compiler(filename, opts.modules, requireReader, opts.sourceIndex, hammerheadProcessScript);
 
     var compilation = new Promise(function (resolve, reject) {
         compiler.compile(function (errs, out) {

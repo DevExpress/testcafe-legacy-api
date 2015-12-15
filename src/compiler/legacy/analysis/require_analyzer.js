@@ -1,6 +1,5 @@
 var astProcessor  = require('uglify-js').uglify,
     Common        = require('./../common'),
-    Hammerhead    = require('testcafe-hammerhead'),
     Ast           = require('./../ast'),
     CallAnalyzer  = require('./call_analyzer'),
     StepsAnalyzer = require('./steps_analyzer');
@@ -52,7 +51,7 @@ function analyzeRequireCode (requireAst, descriptor, errs, sourceIndex) {
     }
 }
 
-exports.run = function (requireFilename, ownerFilename, sourceIndex, callback) {
+exports.run = function (requireFilename, ownerFilename, sourceIndex, hammerheadProcessScript, callback) {
     var errs       = [],
         descriptor = {
             hasErrs:           false,
@@ -71,7 +70,7 @@ exports.run = function (requireFilename, ownerFilename, sourceIndex, callback) {
         }
 
         if (!errs.length)
-            descriptor.jsCode = Hammerhead.wrapDomAccessors(descriptor.jsCode, true);
+            descriptor.jsCode = hammerheadProcessScript(descriptor.jsCode, true);
 
         //NOTE: User can forget ';' at the end of the require js file. In this case, an js exception may occure after
         //requires merging. So we add ';' at the end of the require code manually

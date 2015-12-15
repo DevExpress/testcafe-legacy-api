@@ -4,17 +4,18 @@ import remove from '../utils/array-remove';
 
 
 export default class RequireReader {
-    constructor (descriptorsCache) {
-        this.descriptorsCache = descriptorsCache || {};
-        this.readings         = [];
-        this.waiters          = {};
+    constructor (descriptorsCache, hammerheadProcessScript) {
+        this.descriptorsCache        = descriptorsCache || {};
+        this.readings                = [];
+        this.waiters                 = {};
+        this.hammerheadProcessScript = hammerheadProcessScript;
     }
 
     async _analyzeRequire (require, filename, sourceIndex) {
         this.readings.push(require);
 
         return new Promise(resolve => {
-            RequireAnalyzer.run(require, filename, sourceIndex, (errs, descriptor) => {
+            RequireAnalyzer.run(require, filename, sourceIndex, this.hammerheadProcessScript, (errs, descriptor) => {
                 this.descriptorsCache[require] = descriptor;
 
                 remove(this.readings, require);
