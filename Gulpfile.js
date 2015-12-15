@@ -49,6 +49,5 @@ gulp.task('test-server', ['build'], function () {
 
 // Publish
 gulp.task('publish', ['test-server'], function () {
-    // TODO switch publish tag once we'll be ready to release
-    return publish({ tag: 'alpha' });
+    return publish();
 });
