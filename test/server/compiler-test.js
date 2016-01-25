@@ -1,4 +1,5 @@
 var expect                  = require('chai').expect;
+var fs                      = require('fs');
 var read                    = require('read-file-relative').readSync;
 var Promise                 = require('pinkie');
 var hammerheadProcessScript = require('testcafe-hammerhead').wrapDomAccessors;
@@ -10,8 +11,9 @@ var ERR_CODE                = require('../../lib/compiler/legacy/err_codes');
 function compile (filename, opts) {
     opts = opts || {};
 
+    var code          = fs.readFileSync(filename).toString();
     var requireReader = new RequireReader(opts.requiresDescriptorCache, hammerheadProcessScript);
-    var compiler      = new Compiler(filename, opts.modules, requireReader, opts.sourceIndex, hammerheadProcessScript);
+    var compiler      = new Compiler(code, filename, opts.modules, requireReader, opts.sourceIndex, hammerheadProcessScript);
 
     var compilation = new Promise(function (resolve, reject) {
         compiler.compile(function (errs, out) {
@@ -248,17 +250,6 @@ describe('Compiler', function () {
     });
 
     describe('Errors', function () {
-        it('Read file failed', function () {
-            var filename = './non/existent/file';
-
-            return compile(filename, { shouldFail: true })
-                .catch(function (errs) {
-                    expect(errs.length).eql(1);
-                    expect(errs[0].type).eql(ERR_CODE.READ_FILE_FAILED);
-                    expect(normalizePath(errs[0].filename)).eql(filename);
-                });
-        });
-
         it('Javascript parsing failed', function () {
             var filename = 'test/server/data/compiler/parsing_failed.test.js';
 

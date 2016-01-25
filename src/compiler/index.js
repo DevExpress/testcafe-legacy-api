@@ -1,22 +1,26 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import OS from 'os-family';
+import stripBom from 'strip-bom';
 import { createHash } from 'crypto';
 import { resolve as resolveUrl } from 'url';
 import Promise from 'pinkie';
 import { Compiler as LegacyCompiler, getErrMsg } from './legacy';
 import RequireReader from './require-reader';
-import readSourceFile from '../utils/read-source-file';
+import promisify from '../utils/promisify';
 
+var readFile = promisify(fs.readFile);
 
 function exists (filePath) {
     return new Promise(resolve => fs.exists(filePath, resolve));
 }
 
-export default class CompilerAdapter {
-    constructor (sources, hammerheadProcessScript) {
-        this.sources = sources;
+const FIXTURE_RE = /(^|;|\s+)('|")@fixture\s+.+?\2/gm;
+const PAGE_RE    = /(^|;|\s+)('|")@page\s+.+?\2/gm;
+const TEST_RE    = /(^|;|\s+)('|")@test\2\s*\[('|").+?\3\]\s*=\s*\{/gm;
 
+export default class CompilerAdapter {
+    constructor (hammerheadProcessScript) {
         this.cache = {
             requires:     {},
             requireJsMap: {},
@@ -68,8 +72,8 @@ export default class CompilerAdapter {
             var isExists = await exists(cfgPath);
 
             if (isExists) {
-                var data = await readSourceFile(cfgPath);
-                var cfg  = JSON.parse(data);
+                var data = await readFile(cfgPath);
+                var cfg  = JSON.parse(stripBom(data));
 
                 CompilerAdapter._resolveConfigModules(cfg, dir);
                 cfgs.push(cfg);
@@ -77,12 +81,6 @@ export default class CompilerAdapter {
         }
 
         return cfgs;
-    }
-
-    async getTests () {
-        var fixtures = await Promise.all(this.sources.map(filePath => this._compileFile(filePath)));
-
-        return fixtures.reduce((tests, fixture) => tests.concat(fixture.tests), []);
     }
 
     async _getConfig (filePath) {
@@ -118,9 +116,9 @@ export default class CompilerAdapter {
         return cfg;
     }
 
-    _createLegacyCompilerPromise (filePath, modules) {
+    _createLegacyCompilerPromise (code, filename, modules) {
         return new Promise((resolve, reject) => {
-            var legacyCompiler = new LegacyCompiler(filePath, modules, this.requireReader, this.cache.sourceIndex, this.hammerheadProcessScript);
+            var legacyCompiler = new LegacyCompiler(code, filename, modules, this.requireReader, this.cache.sourceIndex, this.hammerheadProcessScript);
 
             legacyCompiler.compile((errs, out) => {
                 if (errs) {
@@ -136,7 +134,7 @@ export default class CompilerAdapter {
         });
     }
 
-    _createFixture (compiled, filePath, baseUrl, requireJsMapKey, remainderJs) {
+    _createTests (compiled, filePath, baseUrl, requireJsMapKey, remainderJs) {
         var fixture = {
             name:            compiled.fixture,
             path:            filePath,
@@ -146,21 +144,26 @@ export default class CompilerAdapter {
             getSharedJs:     () => this.cache.requireJsMap[requireJsMapKey] + remainderJs
         };
 
-        fixture.tests = Object.keys(compiled.testsStepData).map(testName => ({
+        return Object.keys(compiled.testsStepData).map(testName => ({
             name:        testName,
             sourceIndex: this.cache.sourceIndex,
             stepData:    compiled.testsStepData[testName],
-            fixture:     fixture
+            fixture:     fixture,
+            isLegacy:    true
         }));
-
-        return fixture;
     }
 
+    canCompile (code, filename) {
+        return /\.test\.js$/.test(filename) &&
+               FIXTURE_RE.test(code) &&
+               PAGE_RE.test(code) &&
+               TEST_RE.test(code);
+    }
 
-    async _compileFile (filePath) {
-        var { modules, baseUrl } = await this._getConfig(filePath);
+    async compile (code, filename) {
+        var { modules, baseUrl } = await this._getConfig(filename);
 
-        var compiled = await this._createLegacyCompilerPromise(filePath, modules);
+        var compiled = await this._createLegacyCompilerPromise(code, filename, modules);
 
         //NOTE: solve memory overuse issue by storing requireJs in the suite-level hash-based map
         //(see: B237609 - Fixture file compiler memory overuse)
@@ -175,6 +178,6 @@ export default class CompilerAdapter {
         if (!requireJsMap[requireJsMapKey])
             requireJsMap[requireJsMapKey] = compiled.requireJs;
 
-        return this._createFixture(compiled, filePath, baseUrl, requireJsMapKey, remainderJs);
+        return this._createTests(compiled, filename, baseUrl, requireJsMapKey, remainderJs);
     }
 }

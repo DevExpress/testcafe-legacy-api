@@ -1,31 +1,28 @@
 var util = require('util'),
+    fs = require('fs'),
     javascriptParser = require('uglify-js').parser,
     ErrCodes = require('./err_codes'),
-    readSourceFile = require('../../utils/read-source-file');
+    stripBom = require('strip-bom'),
+    promisify = require('../../utils/promisify');
+
+var readFile = promisify(fs.readFile);
 
 exports.construct = function (fileName, ownerFilename, callback) {
-    readSourceFile(fileName)
+    readFile(fileName)
         .then(data => {
-            var ast     = null,
-                srcCode = data.toString().trim();
+            data = stripBom(data);
 
-            //NOTE: perform srcCode preprocessing the same way it's done in the uglify tokenizer, so
-            //we'll get correct entities positions for code generator
-            srcCode = srcCode.replace(/\r\n?|[\n\u2028\u2029]/g, "\n");
+            var constructed = null;
 
             try {
-                ast = javascriptParser.parse(srcCode, false, true);
-            } catch (parseErr) {
-                callback({
-                    type:      ErrCodes.JAVASCRIPT_PARSING_FAILED,
-                    filename:  fileName,
-                    parserErr: parseErr
-                });
-
+                constructed = constructFromCode(data, fileName);
+            }
+            catch(err) {
+                callback(err);
                 return;
             }
 
-            callback(null, ast, srcCode);
+            callback(null, constructed.ast, constructed.preprocessedCode);
         })
         .catch(() => {
             callback({
@@ -34,6 +31,31 @@ exports.construct = function (fileName, ownerFilename, callback) {
                 ownerFilename: ownerFilename
             });
         });
+};
+
+var constructFromCode = exports.constructFromCode = function (code, fileName) {
+    var ast = null;
+
+    code = code.toString().trim();
+
+    //NOTE: perform srcCode preprocessing the same way it's done in the uglify tokenizer, so
+    //we'll get correct entities positions for code generator
+    code = code.replace(/\r\n?|[\n\u2028\u2029]/g, "\n");
+
+    try {
+      ast = javascriptParser.parse(code, false, true);
+    } catch (parseErr) {
+        throw {
+          type: ErrCodes.JAVASCRIPT_PARSING_FAILED,
+          filename: fileName,
+          parserErr: parseErr
+        };
+    }
+
+    return {
+        ast: ast,
+        preprocessedCode: code
+    };
 };
 
 var getEntryName = exports.getEntryName = function (entry) {

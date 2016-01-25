@@ -1,14 +1,19 @@
 var path = require('path'),
+    fs = require('fs'),
     util = require('util'),
     astProcessor = require('uglify-js').uglify,
     javascriptParser = require('uglify-js').parser,
     async = require('async'),
+    stripBom = require('strip-bom'),
+    Promise = require('pinkie'),
     Common = require('./common'),
     Ast = require('./ast'),
     CallAnalyzer = require('./analysis/call_analyzer'),
     StepsAnalyzer = require('./analysis/steps_analyzer'),
     ErrCodes = require('./err_codes'),
-    readSourceFile = require('../../utils/read-source-file');
+    promisify = require('../../utils/promisify');
+
+var readFile = promisify(fs.readFile);
 
 //Util
 //NOTE: this is a version of splice which can operate with array of the injectable items
@@ -19,12 +24,12 @@ function multySplice(arr, index, deleteCount, itemsToInsert) {
 }
 
 //Compiler
-var Compiler = module.exports = function (filename, modules, requireReader, sourceIndex, hammerheadProcessScript) {
+var Compiler = module.exports = function (src, filename, modules, requireReader, sourceIndex, hammerheadProcessScript) {
     this.walker = astProcessor.ast_walker();
     this.hammerheadProcessScript = hammerheadProcessScript;
 
     this.filename = filename;
-    this.src = null;
+    this.src = src;
     this.workingDir = path.dirname(this.filename);
 
     this.modules = modules;
@@ -435,8 +440,10 @@ Compiler.prototype._createExternalTestCasesAnalyzer = function (testCasesPath, r
     var compiler = this;
 
     return function (readerCallback) {
-        readSourceFile(testCasesPath)
+        readFile(testCasesPath)
             .then(data => {
+                data = stripBom(data);
+
                 var ast = compiler._parseExternalTestCases(data);
                 compiler._validateTestCaseListAst(ast, testCasesPath);
 
@@ -495,33 +502,39 @@ Compiler.prototype._prepareTestCases = function (callback) {
 //Compile
 Compiler.prototype.compile = function (callback) {
     var compiler = this;
+    var constructed = null;
 
-    Ast.construct(this.filename, null, function (parseErr, ast, src) {
-        if (parseErr)
-            callback([parseErr]);
-        else {
-            compiler.src = src;
-            compiler._analyzeAst(ast);
+    try {
+        constructed = Ast.constructFromCode(this.src, this.filename);
+    }
+    catch(parserErr) {
+        callback([parserErr]);
+        return;
+    }
 
-            if (!compiler.out.fixture)
-                compiler._fixtureErr(ErrCodes.FIXTURE_DIRECTIVE_IS_UNDEFINED);
+    var ast = constructed.ast;
 
-            if (!compiler.out.page)
-                compiler._fixtureErr(ErrCodes.PAGE_DIRECTIVE_IS_UNDEFINED);
+    compiler.src = constructed.preprocessedCode;
+    compiler._analyzeAst(ast);
 
-            compiler.out.remainderJs = compiler._getRemainderCode(ast);
+    if (!compiler.out.fixture)
+        compiler._fixtureErr(ErrCodes.FIXTURE_DIRECTIVE_IS_UNDEFINED);
 
-            compiler._analyzeRequires(function () {
-                compiler._prepareTestCases(function () {
-                    compiler._compileTestsStepData();
+    if (!compiler.out.page)
+        compiler._fixtureErr(ErrCodes.PAGE_DIRECTIVE_IS_UNDEFINED);
 
-                    if (compiler.ok)
-                        callback(null, compiler.out);
+    compiler.out.remainderJs = compiler._getRemainderCode(ast);
 
-                    else
-                        callback(compiler.errs);
-                });
-            });
-        }
+    compiler._analyzeRequires(function () {
+        compiler._prepareTestCases(function () {
+            compiler._compileTestsStepData();
+
+            if (compiler.ok)
+                callback(null, compiler.out);
+
+            else
+                callback(compiler.errs);
+        });
     });
+
 };
