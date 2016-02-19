@@ -138,9 +138,8 @@ export default class CompilerAdapter {
         var fixture = {
             name:            compiled.fixture,
             path:            filePath,
-            page:            resolveUrl(baseUrl, compiled.page),
+            pageUrl:         resolveUrl(baseUrl, compiled.page),
             authCredentials: compiled.authCredentials,
-            tests:           null,
             getSharedJs:     () => this.cache.requireJsMap[requireJsMapKey] + remainderJs
         };
 

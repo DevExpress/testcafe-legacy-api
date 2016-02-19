@@ -1,0 +1,8 @@
+{
+    "modules": {
+        "testModule": [
+            "./module/m_req1.js",
+            "./module/m_req2.js"
+        ]
+    }
+}

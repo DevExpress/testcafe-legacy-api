@@ -1,6 +1,7 @@
 var expect                  = require('chai').expect;
 var path                    = require('path');
 var fs                      = require('fs');
+var read                    = require('read-file-relative').readSync;
 var stripBom                = require('strip-bom');
 var multl                   = require('multiline');
 var Promise                 = require('pinkie');
@@ -10,6 +11,65 @@ var RequireAnalyzer         = require('../../lib/compiler/legacy/analysis/requir
 
 
 describe('Legacy compiler adapter', function () {
+    function sanitize (code) {
+        return code.replace(/(\r\n|\n|\r)/gm, '')
+            .replace(/'/gm, '"')
+            .replace(/\s+/gm, '');
+    }
+
+    function getTestByName (tests, name) {
+        for (var i = 0; i < tests.length; i++) {
+            if (tests[i].name === name)
+                return tests[i];
+        }
+
+        return null;
+    }
+
+    it('Should compile and provide tests in the current TestCafe format', function () {
+        var compiler = new CompilerAdapter(hammerheadProcessScript);
+        var filename = path.resolve('test/server/data/compiler/compile/src.test.js');
+        var code     = stripBom(fs.readFileSync(filename));
+
+        return compiler
+            .compile(code, filename)
+            .then(function (tests) {
+                expect(tests.length).eql(2);
+
+                var fixture = tests[0].fixture;
+
+                expect(fixture.path).eql(filename);
+                expect(fixture.pageUrl).eql('http://my.page.url/');
+                expect(fixture.authCredentials.username).eql('myLogin');
+                expect(fixture.authCredentials.password).eql('myPassword');
+
+                var expectedRequireJs   = read('./data/compiler/compile/expected_require_js.js');
+                var expectedRemainderJs = read('./data/compiler/compile/expected_remainder_js.js');
+
+                expect(sanitize(fixture.getSharedJs())).eql(sanitize(expectedRequireJs + expectedRemainderJs));
+
+                var test1           = getTestByName(tests, 'My first test');
+                var expectedTest1Js = read('./data/compiler/compile/test1_expected.js');
+
+                expect(test1.isLegacy).to.be.true;
+                expect(Array.isArray(test1.sourceIndex)).to.be.true;
+                expect(sanitize(test1.stepData.js)).eql(sanitize(expectedTest1Js));
+                expect(test1.stepData.names).eql(['1.Do smthg cool', '2.Stop here']);
+
+                var test2           = getTestByName(tests, 'I want more tests!');
+                var expectedTest2Js = read('./data/compiler/compile/test2_expected.js');
+
+                expect(test2.isLegacy).to.be.true;
+                expect(Array.isArray(test2.sourceIndex)).to.be.true;
+                expect(sanitize(test2.stepData.js)).eql(sanitize(expectedTest2Js));
+                expect(test2.stepData.names).eql([
+                    '1.Here we go',
+                    "2.I'm really tired creating stupid names for test steps",
+                    '3.This is a final step'
+                ]);
+            });
+    });
+
     it('Should read each require once and save it to the cache', function () {
         var requireAnalyzingCount    = 0;
         var nativeRequireAnalyzerRun = RequireAnalyzer.run;
@@ -50,18 +110,6 @@ describe('Legacy compiler adapter', function () {
             .catch(function (err) {
                 expect(err).to.be.an.instanceof(Error);
                 expect(err.message).not.to.be.empty;
-            });
-    });
-
-    it('Should mark test as "legacy"', function () {
-        var compiler = new CompilerAdapter(hammerheadProcessScript);
-        var filename = path.resolve('test/server/data/adapter-test-suite/top.test.js');
-        var code     = stripBom(fs.readFileSync(filename));
-
-        return compiler
-            .compile(code, filename)
-            .then(function (tests) {
-                expect(tests[0].isLegacy).to.be.true;
             });
     });
 

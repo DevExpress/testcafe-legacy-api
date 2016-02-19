@@ -820,7 +820,7 @@ describe('Compiler', function () {
                 });
         });
 
-        it('T215683: TestCafe cannot perform Windows authentication if the password contains a colon', function () {
+        it('T215683 - TestCafe cannot perform Windows authentication if the password contains a colon', function () {
             return compile('test/server/data/compiler/T215683.test.js')
                 .then(function (out) {
                     expect(out.authCredentials.username).eql('someName');
