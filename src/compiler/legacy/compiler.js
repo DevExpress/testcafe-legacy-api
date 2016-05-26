@@ -178,7 +178,7 @@ Compiler.prototype._getRemainderCode = function (ast) {
         if (this.ok) {
             var remainderCode = astProcessor.gen_code(remainderAst, {beautify: true});
 
-            return this.hammerheadProcessScript(remainderCode, true);
+            return this.hammerheadProcessScript(remainderCode, false);
         }
     }
 
@@ -344,7 +344,7 @@ Compiler.prototype._addOutputTestStepData = function (testName, testStepData) {
 
     this.out.testsStepData[testName] = {
         names: testStepData.names,
-        js: this.hammerheadProcessScript(js, true)
+        js: this.hammerheadProcessScript(js, false)
     };
 };
 

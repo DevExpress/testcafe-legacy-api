@@ -70,7 +70,7 @@ exports.run = function (requireFilename, ownerFilename, sourceIndex, hammerheadP
         }
 
         if (!errs.length)
-            descriptor.jsCode = hammerheadProcessScript(descriptor.jsCode, true);
+            descriptor.jsCode = hammerheadProcessScript(descriptor.jsCode, false);
 
         //NOTE: User can forget ';' at the end of the require js file. In this case, an js exception may occure after
         //requires merging. So we add ';' at the end of the require code manually

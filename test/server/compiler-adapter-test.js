@@ -5,7 +5,7 @@ var read                    = require('read-file-relative').readSync;
 var stripBom                = require('strip-bom');
 var multl                   = require('multiline');
 var Promise                 = require('pinkie');
-var hammerheadProcessScript = require('testcafe-hammerhead').wrapDomAccessors;
+var hammerheadProcessScript = require('testcafe-hammerhead').processScript;
 var CompilerAdapter         = require('../../lib').Compiler;
 var RequireAnalyzer         = require('../../lib/compiler/legacy/analysis/require_analyzer');
 
