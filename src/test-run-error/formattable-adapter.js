@@ -1,6 +1,6 @@
 import { escape as escapeHtml, assignIn, find } from 'lodash';
 import highlight from 'highlight-es';
-import { Parser } from 'parse5';
+import parse5 from 'parse5';
 import TEMPLATES from './templates';
 
 const NEWLINE = /\r\n|[\n\r\u2028\u2029]/;
@@ -10,8 +10,6 @@ var renderer = ['string', 'punctuator', 'keyword', 'number', 'regex', 'comment',
 
     return syntaxRenderer;
 }, {});
-
-var parser = new Parser();
 
 export default class TestRunErrorFormattableAdapter {
     constructor (err, metaInfo) {
@@ -75,7 +73,7 @@ export default class TestRunErrorFormattableAdapter {
 
     formatMessage (decorator, viewportWidth) {
         var msgHtml  = this.getErrorMarkup(viewportWidth);
-        var fragment = parser.parseFragment(msgHtml);
+        var fragment = parse5.parseFragment(msgHtml);
 
         return TestRunErrorFormattableAdapter._decorateHtml(fragment, decorator);
     }

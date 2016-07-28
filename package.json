@@ -52,6 +52,7 @@
   "dependencies": {
     "async": "0.2.6",
     "babel-runtime": "^5.8.34",
+    "dedent": "^0.6.0",
     "lodash": "^4.14.0",
     "moment": "^2.14.1",
     "mustache": "^2.2.1",
