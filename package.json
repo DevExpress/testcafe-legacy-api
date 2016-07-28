@@ -1,6 +1,6 @@
 {
   "name": "testcafe-legacy-api",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "Legacy API support for TestCafe",
   "main": "lib/index.js",
   "scripts": {
@@ -52,7 +52,11 @@
   "dependencies": {
     "async": "0.2.6",
     "babel-runtime": "^5.8.34",
+    "lodash": "^4.14.0",
+    "moment": "^2.14.1",
+    "mustache": "^2.2.1",
     "os-family": "^1.0.0",
+    "parse5": "^2.1.5",
     "pify": "^2.3.0",
     "pinkie": "^2.0.1",
     "strip-bom": "^2.0.0",

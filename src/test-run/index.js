@@ -4,6 +4,7 @@ import Mustache from 'mustache';
 import { Session } from 'testcafe-hammerhead';
 import COMMAND from './command';
 import ERROR_TYPE from '../test-run-error/type';
+import TestRunErrorFormattableAdapter from '../test-run-error/formattable-adapter';
 
 // Const
 const TEST_RUN_TEMPLATE        = read('../client/test-run/index.js.mustache');
@@ -11,7 +12,7 @@ const IFRAME_TEST_RUN_TEMPLATE = read('../client/test-run/iframe.js.mustache');
 
 
 export default class LegacyTestRun extends Session {
-    constructor (test, browserConnection, screenshotCapturer, warningLog, opts, FormattableAdapterCtor) {
+    constructor (test, browserConnection, screenshotCapturer, warningLog, opts) {
         var uploadsRoot = path.dirname(test.fixture.path);
 
         super(uploadsRoot);
@@ -30,7 +31,6 @@ export default class LegacyTestRun extends Session {
         this.nativeDialogsInfoTimeStamp = 0;
         this.stepsSharedData            = {};
         this.screenshotCapturer         = screenshotCapturer;
-        this.FormattableAdapterCtor     = FormattableAdapterCtor;
 
         this.injectable.scripts.push('/testcafe-core.js');
         this.injectable.scripts.push('/testcafe-ui.js');
@@ -89,7 +89,7 @@ export default class LegacyTestRun extends Session {
             // reason (e.g. we don't have permissions to write a screenshot file).
         }
 
-        var errAdapter = new this.FormattableAdapterCtor(err, {
+        var errAdapter = new TestRunErrorFormattableAdapter(err, {
             userAgent:      this.browserConnection.userAgent,
             screenshotPath: screenshotPath,
             callsite:       callsite
