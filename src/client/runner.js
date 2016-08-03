@@ -21,10 +21,11 @@ var beforeUnloadRaised = false;
 
 hammerhead.on(hammerhead.EVENTS.beforeUnload, () => beforeUnloadRaised = true);
 
-var Runner = function (startedCallback, testRunId) {
+var Runner = function (startedCallback, testRunId, windowId) {
     RunnerBase.apply(this, [startedCallback]);
 
     this.testRunId          = testRunId;
+    this.windowId           = windowId;
     this.testContextStorage = new TestContextStorage(window, testRunId);
 
     if (!this.testContextStorage.get()) {
@@ -95,18 +96,18 @@ Runner.prototype._beforeScreenshot = function () {
     this.eventEmitter.emit(RunnerBase.SCREENSHOT_CREATING_STARTED_EVENT, {});
     this.savedDocumentTitle = document.title;
 
-    var assignedTitle = this.testRunId;
+    this.assignedTitle = `[ ${this.windowId} ]`;
 
     // NOTE: we should keep the page url in document.title
     // while the screenshot is being created
     this.checkTitleIntervalId = nativeMethods.setInterval.call(window, () => {
-        if (document.title !== assignedTitle) {
+        if (document.title !== this.assignedTitle) {
             this.savedDocumentTitle = document.title;
-            document.title          = assignedTitle;
+            document.title          = this.assignedTitle;
         }
     }, CHECK_TITLE_INTERVAL);
 
-    document.title = assignedTitle;
+    document.title = this.assignedTitle;
 
     return new Promise(resolve => nativeMethods.setTimeout.call(window, resolve, APPLY_DOCUMENT_TITLE_TIMEOUT));
 };
@@ -117,6 +118,7 @@ Runner.prototype._afterScreenshot = function () {
     document.title            = this.savedDocumentTitle;
     this.checkTitleIntervalId = null;
     this.savedDocumentTitle   = null;
+    this.assignedTitle        = null;
 
     this.eventEmitter.emit(RunnerBase.SCREENSHOT_CREATING_FINISHED_EVENT, {});
     this.stepIterator.resume();
@@ -146,7 +148,16 @@ Runner.prototype._onTestError = function (err, isAssertion) {
 
     if (err.screenshotRequired) {
         this.stepIterator.suspend();
-        errorProcessingChain = errorProcessingChain.then(() => this._beforeScreenshot());
+        errorProcessingChain = errorProcessingChain
+            .then(() => this._beforeScreenshot())
+            .then(() => {
+                err.pageInfo = {
+                    url:    window.location.toString(),
+                    title:  this.assignedTitle,
+                    width:  window.innerWidth,
+                    height: window.innerHeight
+                };
+            });
     }
 
     errorProcessingChain = errorProcessingChain.then(() => this._reportErrorToServer(err, isAssertion));
@@ -213,7 +224,13 @@ Runner.prototype._onTakeScreenshot = function (e) {
                 var msg = {
                     cmd:        COMMAND.takeScreenshot,
                     stepName:   e.stepName,
-                    customPath: e.filePath
+                    customPath: e.filePath,
+                    pageInfo:   {
+                        url:    window.location.toString(),
+                        title:  this.assignedTitle,
+                        width:  window.innerWidth,
+                        height: window.innerHeight
+                    }
                 };
 
                 transport.asyncServiceMsg(msg, resolve);
