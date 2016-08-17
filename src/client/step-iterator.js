@@ -522,7 +522,6 @@ StepIterator.prototype.__waitFor = function (callback) {
 
 StepIterator.prototype.takeScreenshot = function (callback, filePath) {
     this.eventEmitter.emit(StepIterator.TAKE_SCREENSHOT_EVENT, {
-        stepName: this.getCurrentStep(),
         filePath: filePath || '',
         callback: callback
     });

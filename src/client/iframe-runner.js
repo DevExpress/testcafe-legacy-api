@@ -110,7 +110,6 @@ IFrameRunner.prototype._onGetStepsSharedData = function (e) {
 IFrameRunner.prototype._onTakeScreenshot = function (e) {
     var msg = {
         cmd:      RunnerBase.IFRAME_TAKE_SCREENSHOT_REQUEST_CMD,
-        stepName: e.stepName,
         filePath: e.filePath
     };
 
