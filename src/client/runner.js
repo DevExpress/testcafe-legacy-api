@@ -151,12 +151,8 @@ Runner.prototype._onTestError = function (err, isAssertion) {
         errorProcessingChain = errorProcessingChain
             .then(() => this._beforeScreenshot())
             .then(() => {
-                err.pageInfo = {
-                    url:    window.location.toString(),
-                    title:  this.assignedTitle,
-                    width:  window.innerWidth,
-                    height: window.innerHeight
-                };
+                err.innerWidth  = window.innerWidth;
+                err.innerHeight = window.innerHeight;
             });
     }
 
@@ -224,12 +220,8 @@ Runner.prototype._onTakeScreenshot = function (e) {
                 var msg = {
                     cmd:        COMMAND.takeScreenshot,
                     customPath: e.filePath,
-                    pageInfo:   {
-                        url:    window.location.toString(),
-                        title:  this.assignedTitle,
-                        width:  window.innerWidth,
-                        height: window.innerHeight
-                    }
+                    innerWidth:  window.innerWidth,
+                    innerHeight: window.innerHeight
                 };
 
                 transport.asyncServiceMsg(msg, resolve);
