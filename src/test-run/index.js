@@ -52,7 +52,7 @@ export default class LegacyTestRun extends Session {
             testSteps:              this.test.stepData.js,
             sharedJs:               sharedJs,
             testRunId:              this.id,
-            windowId:               this.browserConnection.id,
+            browserId:              this.browserConnection.id,
             browserHeartbeatUrl:    this.browserConnection.heartbeatUrl,
             browserStatusUrl:       this.browserConnection.statusUrl,
             takeScreenshots:        this.screenshotCapturer.enabled,

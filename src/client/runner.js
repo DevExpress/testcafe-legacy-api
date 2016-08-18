@@ -21,11 +21,11 @@ var beforeUnloadRaised = false;
 
 hammerhead.on(hammerhead.EVENTS.beforeUnload, () => beforeUnloadRaised = true);
 
-var Runner = function (startedCallback, testRunId, windowId) {
+var Runner = function (startedCallback, testRunId, browserId) {
     RunnerBase.apply(this, [startedCallback]);
 
     this.testRunId          = testRunId;
-    this.windowId           = windowId;
+    this.browserId          = browserId;
     this.testContextStorage = new TestContextStorage(window, testRunId);
 
     if (!this.testContextStorage.get()) {
@@ -96,7 +96,7 @@ Runner.prototype._beforeScreenshot = function () {
     this.eventEmitter.emit(RunnerBase.SCREENSHOT_CREATING_STARTED_EVENT, {});
     this.savedDocumentTitle = document.title;
 
-    this.assignedTitle = `[ ${this.windowId} ]`;
+    this.assignedTitle = `[ ${this.browserId} ]`;
 
     // NOTE: we should keep the page url in document.title
     // while the screenshot is being created
