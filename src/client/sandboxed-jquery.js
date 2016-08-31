@@ -1719,7 +1719,13 @@ export function init (window, undefined) {
                     container.style.zoom = 1;
                 }
 
-                body.removeChild(container);
+                // NOTE: in Firefox, "body.insertBefore(container, body.firstChild)"
+                // sometimes doesn't insert a container (it looks like it depends on
+                // the current page loading phase). Since this behavior is unstable,
+                // we should check if the body contains the container
+                if (body.contains(container))
+                    body.removeChild(container);
+
                 marginDiv = div = container = null;
 
                 jQuery.extend(support, offsetSupport);
