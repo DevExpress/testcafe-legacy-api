@@ -120,6 +120,10 @@ export default class LegacyTestRun extends Session {
 
         ctx.redirect(this.browserConnection.idleUrl);
     }
+
+    async start () {
+        // NOTE: required to keep API similar to TestRun. Just do nothing here.
+    }
 }
 
 // Service message handlers
