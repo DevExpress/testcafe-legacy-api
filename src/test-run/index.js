@@ -122,6 +122,7 @@ export default class LegacyTestRun extends Session {
     }
 
     async start () {
+        // NOTE: required to keep API similar to TestRun. Just do nothing here.
     }
 }
 
