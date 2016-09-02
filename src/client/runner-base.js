@@ -240,7 +240,6 @@ RunnerBase.prototype._initIFrameBehavior = function () {
 
             case RunnerBase.IFRAME_TAKE_SCREENSHOT_REQUEST_CMD:
                 runner._onTakeScreenshot({
-                    stepName: message.stepName,
                     filePath: message.filePath,
                     callback: function () {
                         msg = {

@@ -223,7 +223,6 @@ Runner.prototype._onTakeScreenshot = function (e) {
             return new Promise(resolve => {
                 var msg = {
                     cmd:        COMMAND.takeScreenshot,
-                    stepName:   e.stepName,
                     customPath: e.filePath,
                     pageInfo:   {
                         url:    window.location.toString(),
