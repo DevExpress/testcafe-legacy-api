@@ -20,6 +20,7 @@ var RequestBarrier = testCafeCore.RequestBarrier;
 var serviceUtils   = testCafeCore.serviceUtils;
 var domUtils       = testCafeCore.domUtils;
 var eventUtils     = testCafeCore.eventUtils;
+var JSON           = hammerhead.json;
 
 var modalBackground = testCafeUI.modalBackground;
 
@@ -208,7 +209,7 @@ RunnerBase.prototype._initIFrameBehavior = function () {
                 break;
 
             case RunnerBase.IFRAME_SET_SHARED_DATA_CMD:
-                runner.stepIterator.setSharedData(message.sharedData);
+                runner.stepIterator.setSharedData(JSON.parse(message.sharedData));
                 break;
 
             case RunnerBase.IFRAME_NEXT_STEP_STARTED_CMD:
