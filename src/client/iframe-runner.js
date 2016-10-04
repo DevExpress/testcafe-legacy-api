@@ -6,6 +6,7 @@ import RunnerBase from './runner-base.js';
 
 var messageSandbox = hammerhead.eventSandbox.message;
 var serviceUtils   = testCafeCore.serviceUtils;
+var JSON           = hammerhead.json;
 
 
 var IFrameRunner = function (startedCallback) {
@@ -83,7 +84,7 @@ IFrameRunner.prototype._onAssertionFailed = function (e) {
 IFrameRunner.prototype._onSetStepsSharedData = function (e) {
     var msg = {
         cmd:        RunnerBase.IFRAME_SET_SHARED_DATA_CMD,
-        sharedData: e.stepsSharedData
+        sharedData: JSON.stringify(e.stepsSharedData)
     };
 
     messageSandbox.sendServiceMsg(msg, window.top);
