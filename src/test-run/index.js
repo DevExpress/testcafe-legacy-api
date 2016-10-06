@@ -157,10 +157,6 @@ ServiceMessages[COMMAND.getAndUncheckFileDownloadingFlag] = function () {
     return isFileDownloading;
 };
 
-ServiceMessages[COMMAND.uncheckFileDownloadingFlag] = function () {
-    this.isFileDownloading = false;
-};
-
 ServiceMessages[COMMAND.nativeDialogsInfoSet] = function (msg) {
     if (msg.timeStamp >= this.nativeDialogsInfoTimeStamp) {
         //NOTE: the server can get messages in the wrong sequence if they was sent with a little distance (several milliseconds),

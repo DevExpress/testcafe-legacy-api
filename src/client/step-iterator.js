@@ -350,7 +350,7 @@ StepIterator.prototype._init = function () {
     this.initialized = true;
 
     this._setupUnloadHandlers();
-    pageUnloadBarrier.init();
+    pageUnloadBarrier.init(true);
 };
 
 StepIterator.prototype.start = function (stepNames, testSteps, stepSetup, stepDone, nextStep) {
