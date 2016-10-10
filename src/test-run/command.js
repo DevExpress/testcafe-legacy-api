@@ -11,5 +11,7 @@ export default {
     getStepsSharedData:               'get-steps-shared-data',
     getAndUncheckFileDownloadingFlag: 'get-and-uncheck-file-downloading-flag',
     nativeDialogsInfoSet:             'native-dialogs-info-set',
-    takeScreenshot:                   'take-screenshot'
+    takeScreenshot:                   'take-screenshot',
+    // NOTE: we need this message to support new page unload barier's mechanism
+    waitForFileDownload:              'wait-for-file-download'
 };

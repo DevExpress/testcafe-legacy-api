@@ -157,6 +157,10 @@ ServiceMessages[COMMAND.getAndUncheckFileDownloadingFlag] = function () {
     return isFileDownloading;
 };
 
+ServiceMessages[COMMAND.waitForFileDownload] = function () {
+    // NOTE: we need this message to support new page unload barier's mechanism
+};
+
 ServiceMessages[COMMAND.nativeDialogsInfoSet] = function (msg) {
     if (msg.timeStamp >= this.nativeDialogsInfoTimeStamp) {
         //NOTE: the server can get messages in the wrong sequence if they was sent with a little distance (several milliseconds),
