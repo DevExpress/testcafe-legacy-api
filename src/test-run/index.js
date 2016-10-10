@@ -158,7 +158,7 @@ ServiceMessages[COMMAND.getAndUncheckFileDownloadingFlag] = function () {
 };
 
 ServiceMessages[COMMAND.waitForFileDownload] = function () {
-    // NOTE: we need this message to support new page unload barier's mechanism
+    // NOTE: required to keep API similar to TestRun. Just do nothing here.
 };
 
 ServiceMessages[COMMAND.nativeDialogsInfoSet] = function (msg) {
