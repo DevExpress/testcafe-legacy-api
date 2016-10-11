@@ -12,6 +12,5 @@ export default {
     getAndUncheckFileDownloadingFlag: 'get-and-uncheck-file-downloading-flag',
     nativeDialogsInfoSet:             'native-dialogs-info-set',
     takeScreenshot:                   'take-screenshot',
-    // NOTE: we need this message to support new page unload barier's mechanism
     waitForFileDownload:              'wait-for-file-download'
 };
