@@ -5,6 +5,7 @@ import initAutomation from './init-automation';
 import RunnerBase from './runner-base';
 import IFrameRunner from './iframe-runner';
 import CROSS_DOMAIN_MESSAGES from './cross-domain-messages';
+import SETTINGS from './settings';
 
 var Promise        = hammerhead.Promise;
 var messageSandbox = hammerhead.eventSandbox.message;
@@ -103,7 +104,10 @@ if (window.top !== window) {
         .documentReady()
         .then(() => {
             if (!initialized) {
-                requestBarrier = new RequestBarrier();
+                requestBarrier = new RequestBarrier({
+                    requestsCollection:           SETTINGS.get().REQUESTS_COLLECTION_DELAY,
+                    additionalRequestsCollection: SETTINGS.get().ADDITIONAL_REQUESTS_COLLECTION_DELAY
+                });
 
                 initialized = true;
 

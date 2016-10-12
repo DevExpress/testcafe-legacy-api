@@ -44,7 +44,11 @@
             SKIP_JS_ERRORS:                {{{skipJsErrors}}},
             SELECTOR_TIMEOUT:              {{{selectorTimeout}}},
             ENABLE_SOURCE_INDEX:           true,
-            NATIVE_DIALOGS_INFO:           {{{nativeDialogsInfo}}}
+            NATIVE_DIALOGS_INFO:           {{{nativeDialogsInfo}}},
+
+            PAGE_UNLOAD_BARRIER_TIMEOUT:          500,
+            REQUESTS_COLLECTION_DELAY:            300,
+            ADDITIONAL_REQUESTS_COLLECTION_DELAY: 100
         });
 
         var transport                = testCafeLegacyRunner.transport;
