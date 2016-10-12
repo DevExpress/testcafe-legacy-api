@@ -552,32 +552,28 @@ RunnerBase.prototype._onBeforeUnload = function (fromIFrame, callback) {
     if (this.stopped)
         return;
 
-    //NOTE: we should expect file downloading request only after before unload event (T216625)
-    transport.asyncServiceMsg({ cmd: COMMAND.uncheckFileDownloadingFlag }, function () {
+    //NOTE: we need check it to determinate file downloading
+    runner.isFileDownloadingIntervalID = nativeMethods.setInterval.call(window, function () {
+        transport.asyncServiceMsg({ cmd: COMMAND.getAndUncheckFileDownloadingFlag }, function (res) {
+            if (res) {
+                window.clearInterval(runner.isFileDownloadingIntervalID);
+                runner.isFileDownloadingIntervalID = null;
 
-        //NOTE: we need check it to determinate file downloading
-        runner.isFileDownloadingIntervalID = nativeMethods.setInterval.call(window, function () {
-            transport.asyncServiceMsg({ cmd: COMMAND.getAndUncheckFileDownloadingFlag }, function (res) {
-                if (res) {
-                    window.clearInterval(runner.isFileDownloadingIntervalID);
-                    runner.isFileDownloadingIntervalID = null;
-
-                    if (fromIFrame) {
-                        callback(res);
-                        return;
-                    }
-
-                    if (runner.stepIterator.state.stepDelayTimeout) {
-                        window.clearTimeout(runner.stepIterator.state.stepDelayTimeout);
-                        runner.stepIterator.state.stepDelayTimeout = null;
-                    }
-
-                    runner.stepIterator.state.pageUnloading = false;
-                    runner.stepIterator._runStep();
+                if (fromIFrame) {
+                    callback(res);
+                    return;
                 }
-            });
-        }, CHECK_FILE_DOWNLOADING_DELAY);
-    });
+
+                if (runner.stepIterator.state.stepDelayTimeout) {
+                    window.clearTimeout(runner.stepIterator.state.stepDelayTimeout);
+                    runner.stepIterator.state.stepDelayTimeout = null;
+                }
+
+                runner.stepIterator.state.pageUnloading = false;
+                runner.stepIterator._runStep();
+            }
+        });
+    }, CHECK_FILE_DOWNLOADING_DELAY);
 };
 
 RunnerBase.prototype._clearFileDownloadingInterval = function () {

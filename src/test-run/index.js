@@ -157,8 +157,8 @@ ServiceMessages[COMMAND.getAndUncheckFileDownloadingFlag] = function () {
     return isFileDownloading;
 };
 
-ServiceMessages[COMMAND.uncheckFileDownloadingFlag] = function () {
-    this.isFileDownloading = false;
+ServiceMessages[COMMAND.waitForFileDownload] = function () {
+    // NOTE: required to keep API similar to TestRun. Just do nothing here.
 };
 
 ServiceMessages[COMMAND.nativeDialogsInfoSet] = function (msg) {
