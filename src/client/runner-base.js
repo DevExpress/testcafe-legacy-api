@@ -162,7 +162,10 @@ RunnerBase.prototype._destroy = function () {
 };
 
 RunnerBase.prototype._initBarrier = function () {
-    this.pageInitialRequestBarrier = new RequestBarrier();
+    this.pageInitialRequestBarrier = new RequestBarrier({
+        requestsCollection:           SETTINGS.get().REQUESTS_COLLECTION_DELAY,
+        additionalRequestsCollection: SETTINGS.get().ADDITIONAL_REQUESTS_COLLECTION_DELAY
+    });
 };
 
 RunnerBase.prototype._initIFrameBehavior = function () {

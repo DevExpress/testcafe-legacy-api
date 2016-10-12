@@ -218,7 +218,10 @@ StepIterator.prototype._syncSharedDataWithServer = function (callback) {
 };
 
 StepIterator.prototype._waitActionSideEffectsCompletion = function (action, callback) {
-    var requestBarrier = new RequestBarrier();
+    var requestBarrier = new RequestBarrier({
+        requestsCollection:           SETTINGS.get().REQUESTS_COLLECTION_DELAY,
+        additionalRequestsCollection: SETTINGS.get().ADDITIONAL_REQUESTS_COLLECTION_DELAY
+    });
 
     action.call(window, () => {
         requestBarrier
@@ -234,7 +237,7 @@ StepIterator.prototype._completeAsyncAction = function () {
         return;
 
     pageUnloadBarrier
-        .wait()
+        .wait(SETTINGS.get().PAGE_UNLOAD_BARRIER_TIMEOUT)
         .then(() => iterator._runStep());
 };
 
@@ -317,7 +320,10 @@ StepIterator.prototype.asyncActionSeries = function (items, runArgumentsIterator
                             eventUtils.bind(iframe.contentWindow, 'beforeunload', onBeforeUnload);
 
                             var IframeRequestBarrier = iframe.contentWindow[RequestBarrier.GLOBAL_REQUEST_BARRIER_FIELD];
-                            var iframeRequestBarrier = new IframeRequestBarrier();
+                            var iframeRequestBarrier = new IframeRequestBarrier({
+                                requestsCollection:           SETTINGS.get().REQUESTS_COLLECTION_DELAY,
+                                additionalRequestsCollection: SETTINGS.get().ADDITIONAL_REQUESTS_COLLECTION_DELAY
+                            });
 
                             action(element, () => {
                                 iframeRequestBarrier
