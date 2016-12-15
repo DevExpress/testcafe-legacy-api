@@ -59,8 +59,7 @@ export default class LegacyTestRun extends Session {
             takeScreenshotsOnFails: this.opts.takeScreenshotsOnFails,
             skipJsErrors:           this.opts.skipJsErrors,
             nativeDialogsInfo:      JSON.stringify(this.nativeDialogsInfo),
-            selectorTimeout:        this.opts.selectorTimeout,
-            touchMode:              this.opts.touchMode
+            selectorTimeout:        this.opts.selectorTimeout
         });
     }
 
@@ -71,8 +70,7 @@ export default class LegacyTestRun extends Session {
             takeScreenshotsOnFails: this.opts.takeScreenshotsOnFails,
             skipJsErrors:           this.opts.skipJsErrors,
             nativeDialogsInfo:      JSON.stringify(this.nativeDialogsInfo),
-            selectorTimeout:        this.opts.selectorTimeout,
-            touchMode:              this.opts.touchMode
+            selectorTimeout:        this.opts.selectorTimeout
         });
 
         return iframeWithoutSrc ? 'var isIFrameWithoutSrc = true;' + payloadScript : payloadScript;
