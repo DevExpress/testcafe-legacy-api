@@ -58,8 +58,6 @@ var RunnerBase = function () {
 
     this._initApi();
     this._initIFrameBehavior();
-    
-    eventUtils.setTouchMode(SETTINGS.get().TOUCH_MODE);
 
     hammerhead.on(hammerhead.EVENTS.uncaughtJsError, function (err) {
         //NOTE: in this case we should to stop test iterator in iFrame
