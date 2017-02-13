@@ -566,12 +566,12 @@ export function select () {
                 var selectAutomation = null;
 
                 if (startNode && endNode)
-                    selectAutomation = new automations.SelectEditableContent(startNode, endNode);
+                    selectAutomation = new automations.SelectEditableContent(startNode, endNode, {});
                 else {
                     var selectArgsObject = getSelectAutomationArgumentsObject(element, args);
                     var { startPos, endPos }    = calculateSelectTextArguments(element, selectArgsObject);
 
-                    selectAutomation = new automations.SelectText(element, startPos, endPos);
+                    selectAutomation = new automations.SelectText(element, startPos, endPos, {});
                 }
 
                 selectAutomation
@@ -673,7 +673,7 @@ export function press () {
                 failWithError(ERROR_TYPE.incorrectPressActionArgument);
             else {
                 var PressAutomationCtor = getAutomations(window).Press;
-                var pressAutomation     = new PressAutomationCtor(parsedKeySequence.combinations);
+                var pressAutomation     = new PressAutomationCtor(parsedKeySequence.combinations, {});
 
                 pressAutomation
                     .run()
