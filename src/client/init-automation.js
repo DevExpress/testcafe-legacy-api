@@ -1,4 +1,4 @@
-import { SETTINGS as AUTOMATION_SETTINGS } from './deps/testcafe-automation';
+import testcafeAutomation from './deps/testcafe-automation';
 import { preventRealEvents } from './deps/testcafe-core';
 import { fill as fillAutomationStorage } from './automation-storage';
 
@@ -8,8 +8,23 @@ export default function init () {
     if (initialized)
         return;
 
-    AUTOMATION_SETTINGS.ACTION_STEP_DELAY      = 60;
-    AUTOMATION_SETTINGS.DRAG_ACTION_STEP_DELAY = 100;
+    const ACTION_STEP_DELAY      = 60;
+    const DRAG_ACTION_STEP_DELAY = 100;
+
+    const automationSettingAsClass = testcafeAutomation.SETTINGS === void 0;
+    const AutomationSettings       = automationSettingAsClass ?
+                                     testcafeAutomation.AutomationSettings :
+                                     testcafeAutomation.SETTINGS;
+
+    if (automationSettingAsClass) {
+        // since testcafe v0.13.0
+        Object.defineProperty(AutomationSettings.prototype, 'mouseActionStepDelay', { get: () => ACTION_STEP_DELAY });
+        Object.defineProperty(AutomationSettings.prototype, 'keyActionStepDelay', { get: () => ACTION_STEP_DELAY });
+    }
+    else {
+        AutomationSettings.ACTION_STEP_DELAY      = ACTION_STEP_DELAY;
+        AutomationSettings.DRAG_ACTION_STEP_DELAY = DRAG_ACTION_STEP_DELAY;
+    }
 
     preventRealEvents();
     fillAutomationStorage();
