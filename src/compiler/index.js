@@ -144,11 +144,13 @@ export default class CompilerAdapter {
         };
 
         return Object.keys(compiled.testsStepData).map(testName => ({
-            name:        testName,
-            sourceIndex: this.cache.sourceIndex,
-            stepData:    compiled.testsStepData[testName],
-            fixture:     fixture,
-            isLegacy:    true
+            name:            testName,
+            sourceIndex:     this.cache.sourceIndex,
+            stepData:        compiled.testsStepData[testName],
+            fixture:         fixture,
+            isLegacy:        true,
+            pageUrl:         fixture.pageUrl,
+            authCredentials: fixture.authCredentials
         }));
     }
 
