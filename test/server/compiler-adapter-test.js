@@ -55,6 +55,9 @@ describe('Legacy compiler adapter', function () {
                 expect(Array.isArray(test1.sourceIndex)).to.be.true;
                 expect(sanitize(test1.stepData.js)).eql(sanitize(expectedTest1Js));
                 expect(test1.stepData.names).eql(['1.Do smthg cool', '2.Stop here']);
+                expect(test1.pageUrl).eql('http://my.page.url/');
+                expect(test1.authCredentials.username).eql('myLogin');
+                expect(test1.authCredentials.password).eql('myPassword');
 
                 var test2           = getTestByName(tests, 'I want more tests!');
                 var expectedTest2Js = read('./data/compiler/compile/test2_expected.js');
