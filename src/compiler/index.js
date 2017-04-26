@@ -161,6 +161,14 @@ export default class CompilerAdapter {
                TEST_RE.test(code);
     }
 
+    getSupportedExtension () {
+        return '.test.js';
+    }
+
+    cleanUp () {
+        // NOTE: Do nothing.
+    }
+
     async compile (code, filename) {
         var { modules, baseUrl } = await this._getConfig(filename);
 
