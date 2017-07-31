@@ -185,7 +185,9 @@ function actionArgumentsIterator (actionName) {
         }
         else if (typeof item === 'string') {
             ensureElementsExist(item, actionName, function (elementsArray) {
-                runAction(elementsArray, iterationCallback);
+                runAction(elementsArray, function () {
+                    iterationCallback();
+                });
             });
         }
         else {
@@ -193,7 +195,9 @@ function actionArgumentsIterator (actionName) {
             if (!elementsArray || elementsArray.length < 1)
                 failWithError(ERROR_TYPE.emptyFirstArgument, { action: actionName });
             else
-                runAction(elementsArray, iterationCallback);
+                runAction(elementsArray, function () {
+                    iterationCallback();
+                });
         }
     };
 
@@ -322,13 +326,17 @@ export function click (what, options) {
                 }, false);
 
                 var targetWindow        = iframe ? iframe.contentWindow : window;
-                var ClickAutomationCtor = getAutomations(targetWindow).Click;
-                var clickAutomation     = new ClickAutomationCtor(element, clickOptions);
+                var ClickAutomationCtor = /option|optgroup/.test(domUtils.getTagName(element)) ?
+                                          getAutomations(targetWindow).SelectChildClick : getAutomations(targetWindow).Click;
+
+                var clickAutomation = new ClickAutomationCtor(element, clickOptions);
 
                 clickAutomation
                     .run()
                     .catch(err => failIfActionElementIsInvisible(err, actionType, element))
-                    .then(callback);
+                    .then(function () {
+                        callback();
+                    });
             });
         });
 }
@@ -404,7 +412,9 @@ export function dblclick (what, options) {
                 dblClickAutomation
                     .run()
                     .catch(err => failIfActionElementIsInvisible(err, actionType, element))
-                    .then(callback);
+                    .then(function () {
+                        callback();
+                    });
             });
         });
 }
@@ -487,7 +497,9 @@ export function drag (what) {
                 dragAutomation
                     .run()
                     .catch(err => failIfActionElementIsInvisible(err, actionType, element))
-                    .then(callback);
+                    .then(function () {
+                        callback();
+                    });
             });
         });
 }
@@ -568,8 +580,8 @@ export function select () {
                 if (startNode && endNode)
                     selectAutomation = new automations.SelectEditableContent(startNode, endNode, {});
                 else {
-                    var selectArgsObject = getSelectAutomationArgumentsObject(element, args);
-                    var { startPos, endPos }    = calculateSelectTextArguments(element, selectArgsObject);
+                    var selectArgsObject     = getSelectAutomationArgumentsObject(element, args);
+                    var { startPos, endPos } = calculateSelectTextArguments(element, selectArgsObject);
 
                     selectAutomation = new automations.SelectText(element, startPos, endPos, {});
                 }
@@ -577,7 +589,9 @@ export function select () {
                 selectAutomation
                     .run()
                     .catch(err => failIfActionElementIsInvisible(err, actionType, element))
-                    .then(callback);
+                    .then(function () {
+                        callback();
+                    });
             });
         });
 }
@@ -605,7 +619,7 @@ export function type (what, text, options) {
                 options = options || {};
 
                 var { offsetX, offsetY } = getAutomationOffsetOptions(element, options.offsetX, options.offsetY);
-                var typeOptions = new TypeOptions({
+                var typeOptions          = new TypeOptions({
                     offsetX,
                     offsetY,
                     caretPos: options.caretPos,
@@ -620,7 +634,9 @@ export function type (what, text, options) {
 
                 typeAutomation
                     .run()
-                    .then(callback);
+                    .then(function () {
+                        callback();
+                    });
             });
         });
 }
@@ -657,7 +673,9 @@ export function hover (what, options) {
                 hoverAutomation
                     .run()
                     .catch(err => failIfActionElementIsInvisible(err, actionType, element))
-                    .then(callback);
+                    .then(function () {
+                        callback();
+                    });
             });
         });
 }
@@ -677,7 +695,9 @@ export function press () {
 
                 pressAutomation
                     .run()
-                    .then(callback);
+                    .then(function () {
+                        callback();
+                    });
             }
         });
 }
@@ -834,7 +854,9 @@ export function upload (what, path) {
 
                 uploadAutomation
                     .run()
-                    .then(callback);
+                    .then(function () {
+                        callback();
+                    });
             }
         }
     );

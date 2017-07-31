@@ -1,5 +1,6 @@
 import {
     Click as ClickAutomation,
+    SelectChildClick as SelectChildClickAutomation,
     DblClick as DblClickAutomation,
     DragToOffset as DragToOffsetAutomation,
     DragToElement as DragToElementAutomation,
@@ -18,6 +19,7 @@ const AUTOMATIONS_STORAGE_FLAG = 'runner|automations-storage-flag';
 export function fill () {
     window[AUTOMATIONS_STORAGE_FLAG] = {
         Click:                 ClickAutomation,
+        SelectChildClick:      SelectChildClickAutomation,
         RClick:                RClickAutomation,
         DblClick:              DblClickAutomation,
         Hover:                 HoverAutomation,
