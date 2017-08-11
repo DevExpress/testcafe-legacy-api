@@ -16,7 +16,7 @@ export default class LegacyTestRun extends Session {
         var uploadsRoot = path.dirname(test.fixture.path);
 
         super(uploadsRoot);
-        
+
         this.unstable = false;
 
         this.opts              = opts;
