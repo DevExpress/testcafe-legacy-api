@@ -17,7 +17,6 @@ export default class LegacyTestRun extends Session {
 
         super(uploadsRoot);
 
-        this.running  = false;
         this.unstable = false;
 
         this.opts              = opts;
@@ -41,11 +40,6 @@ export default class LegacyTestRun extends Session {
 
     _getPayloadScript () {
         var sharedJs = this.test.fixture.getSharedJs();
-
-        if (!this.running) {
-            this.running = true;
-            this.emit('start');
-        }
 
         return Mustache.render(TEST_RUN_TEMPLATE, {
             stepNames:              JSON.stringify(this.test.stepData.names),
@@ -123,6 +117,7 @@ export default class LegacyTestRun extends Session {
 
     async start () {
         // NOTE: required to keep API similar to TestRun. Just do nothing here.
+        this.emit('start');
     }
 }
 
