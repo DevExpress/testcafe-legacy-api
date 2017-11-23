@@ -1,6 +1,6 @@
 /*
   This is a patched version of the uglify-js@1.2.6 module.
-  Added a fix for a potential Regular Expression Denial of Service
+  Added a fix for the potential Regular Expression Denial of Service
   security vulnerability: https://nodesecurity.io/advisories/48.
   The fix was copied from the commit in the UglifyJS2 repository:
   https://github.com/mishoo/UglifyJS2/commit/63d35f8f6db6d90d6142132d2d5f0bd5d3d698aa
