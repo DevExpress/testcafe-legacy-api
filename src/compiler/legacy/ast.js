@@ -1,6 +1,6 @@
 var util = require('util'),
     fs = require('fs'),
-    javascriptParser = require('uglify-js').parser,
+    javascriptParser = require('../tools/uglify-js/uglify-js').parser,
     ErrCodes = require('./err_codes'),
     stripBom = require('strip-bom'),
     promisify = require('../../utils/promisify');
