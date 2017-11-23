@@ -28,6 +28,7 @@ gulp.task('lint', function () {
         .src([
             'src/**/*.js',
             '!src/client/**/*.js',
+            '!src/compiler/tools/**/*.js',
             'test/**/**.js',
             'Gulpfile.js'
         ])

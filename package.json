@@ -61,8 +61,7 @@
     "parse5": "^2.1.5",
     "pify": "^2.3.0",
     "pinkie": "^2.0.1",
-    "strip-bom": "^2.0.0",
-    "uglify-js": "1.2.6"
+    "strip-bom": "^2.0.0"
   },
   "files": [
     "lib"

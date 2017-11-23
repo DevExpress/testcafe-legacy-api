@@ -1,4 +1,4 @@
-var astProcessor  = require('uglify-js').uglify,
+var astProcessor  = require('../../tools/uglify-js/uglify-js').uglify,
     Common        = require('./../common'),
     Ast           = require('./../ast'),
     CallAnalyzer  = require('./call_analyzer'),
