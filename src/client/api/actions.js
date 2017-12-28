@@ -634,6 +634,7 @@ export function type (what, text, options) {
 
                 typeAutomation
                     .run()
+                    .catch(err => failIfActionElementIsInvisible(err, actionType, element))
                     .then(function () {
                         callback();
                     });
