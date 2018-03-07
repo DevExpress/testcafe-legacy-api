@@ -48,7 +48,7 @@ export default class LegacyTestRun extends Session {
             testRunId:              this.id,
             browserId:              this.browserConnection.id,
             browserHeartbeatUrl:    this.browserConnection.heartbeatUrl,
-            browserStatusUrl:       this.browserConnection.statusUrl,
+            browserStatusUrl:       this.browserConnection.statusDoneUrl,
             takeScreenshots:        this.screenshotCapturer.enabled,
             takeScreenshotsOnFails: this.opts.takeScreenshotsOnFails,
             skipJsErrors:           this.opts.skipJsErrors,
