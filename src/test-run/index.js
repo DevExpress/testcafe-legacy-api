@@ -112,7 +112,7 @@ export default class LegacyTestRun extends Session {
             message: errMsg
         });
 
-        ctx.redirect(this.browserConnection.idleUrl);
+        ctx.redirect(this.browserConnection.forcedIdleUrl);
     }
 
     async start () {
