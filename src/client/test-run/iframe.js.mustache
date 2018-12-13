@@ -80,11 +80,13 @@
             ADDITIONAL_REQUESTS_COLLECTION_DELAY: 100
         });
 
-        sandboxedJQuery.init(window, undefined);
-        extendJQuerySelectors(sandboxedJQuery.jQuery);
+        window['%hammerhead%'].nativeMethods.documentAddEventListener.call(document, "DOMContentLoaded", function() {
+            sandboxedJQuery.init(window, undefined);
+            extendJQuerySelectors(sandboxedJQuery.jQuery);
 
-        $ = jQuery = sandboxedJQuery.jQuery;
-        jQueryDataMethodProxy.setup($);
+            $ = jQuery = sandboxedJQuery.jQuery;
+            jQueryDataMethodProxy.setup($);
+        });
 
         //NOTE: Override these methods to suppress native dialogs until the test runner in the iFrame gets initialized. (T188994)
         window.alert = window.confirm = window.prompt = new Function();
