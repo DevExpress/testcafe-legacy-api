@@ -62,11 +62,20 @@
     (function () {
         var testCafeLegacyRunner = window['%testCafeLegacyRunner%'];
 
-        var sandboxedJQuery          = testCafeLegacyRunner.sandboxedJQuery;
-        var extendJQuerySelectors    = testCafeLegacyRunner.extendJQuerySelectors;
-        var jQueryDataMethodProxy    = testCafeLegacyRunner.jQueryDataMethodProxy;
-        var iframeDispatcher         = testCafeLegacyRunner.iframeDispatcher;
+        var sandboxedJQuery       = testCafeLegacyRunner.sandboxedJQuery;
+        var extendJQuerySelectors = testCafeLegacyRunner.extendJQuerySelectors;
+        var jQueryDataMethodProxy = testCafeLegacyRunner.jQueryDataMethodProxy;
+        var iframeDispatcher      = testCafeLegacyRunner.iframeDispatcher;
 
+        var documentAddEventListener = window['%hammerhead%'].nativeMethods.documentAddEventListener;
+
+        function initJQuery () {
+            sandboxedJQuery.init(window, undefined);
+            extendJQuerySelectors(sandboxedJQuery.jQuery);
+
+            $ = jQuery = sandboxedJQuery.jQuery;
+            jQueryDataMethodProxy.setup($);
+        }
 
         testCafeLegacyRunner.SETTINGS.set({
             TAKE_SCREENSHOTS_ON_FAILS:     {{{takeScreenshotsOnFails}}},
@@ -80,13 +89,10 @@
             ADDITIONAL_REQUESTS_COLLECTION_DELAY: 100
         });
 
-        window['%hammerhead%'].nativeMethods.documentAddEventListener.call(document, "DOMContentLoaded", function() {
-            sandboxedJQuery.init(window, undefined);
-            extendJQuerySelectors(sandboxedJQuery.jQuery);
-
-            $ = jQuery = sandboxedJQuery.jQuery;
-            jQueryDataMethodProxy.setup($);
-        });
+        if (!document.documentElement)
+            documentAddEventListener.call(document, "DOMContentLoaded", initJQuery);
+        else
+            initJQuery();
 
         //NOTE: Override these methods to suppress native dialogs until the test runner in the iFrame gets initialized. (T188994)
         window.alert = window.confirm = window.prompt = new Function();
