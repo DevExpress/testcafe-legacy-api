@@ -29,6 +29,9 @@ describe('uglify-js issues', function () {
 
     it('Regular Expression Denial of Service', function () {
         // https://nodesecurity.io/advisories/48
+        const NS_PER_SEC = 1e9;
+        const getTime    = hrtime => hrtime[0] * NS_PER_SEC + hrtime[1];
+
         const genstr = function (len, chr) {
             let result = '';
 
@@ -38,7 +41,7 @@ describe('uglify-js issues', function () {
             return result;
         };
 
-        let startTime = Date.now();
+        let startTime = process.hrtime();
 
         try {
             uglifyJs.parser.parse('var a = ' + genstr(10000, '1') + '.1ee7;');
@@ -47,9 +50,9 @@ describe('uglify-js issues', function () {
             // parsing should be failed
         }
 
-        const firstTime = Date.now() - startTime;
+        const firstTime = getTime(process.hrtime(startTime));
 
-        startTime = Date.now();
+        startTime = process.hrtime();
 
         try {
             uglifyJs.parser.parse('var a = ' + genstr(100000, '1') + '.1ee7;');
@@ -58,7 +61,7 @@ describe('uglify-js issues', function () {
             // parsing should be failed
         }
 
-        const secondTime = Date.now() - startTime;
+        const secondTime = getTime(process.hrtime(startTime));
 
         expect(secondTime - firstTime).lt(firstTime * 20);
     });
