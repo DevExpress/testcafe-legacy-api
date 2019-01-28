@@ -15,8 +15,8 @@ import * as sourceIndexTracker from '../source-index';
 import async from '../deps/async';
 import * as sandboxedJQuery from '../sandboxed-jquery';
 import ERROR_TYPE from '../../test-run-error/type';
+import isJQueryObj from 'is-jquery-obj';
 
-var isJQueryObj   = hammerhead.utils.isJQueryObj;
 var nativeMethods = hammerhead.nativeMethods;
 
 var contentEditable  = testCafeCore.contentEditable;
