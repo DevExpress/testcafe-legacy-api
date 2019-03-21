@@ -220,8 +220,16 @@ Runner.prototype._onTakeScreenshot = function (e) {
                 var msg = {
                     cmd:        COMMAND.takeScreenshot,
                     customPath: e.filePath,
-                    innerWidth:  window.innerWidth,
-                    innerHeight: window.innerHeight
+
+                    pageDimensions: {
+                        dpr:            window.devicePixelRatio || 1,
+                        innerWidth:     window.innerWidth,
+                        innerHeight:    window.innerHeight,
+                        documentWidth:  document.documentElement.clientWidth,
+                        documentHeight: document.documentElement.clientHeight,
+                        bodyWidth:      document.body.clientWidth,
+                        bodyHeight:     document.body.clientHeight
+                    }
                 };
 
                 transport.asyncServiceMsg(msg, resolve);
