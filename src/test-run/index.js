@@ -38,7 +38,7 @@ export default class LegacyTestRun extends Session {
         this.injectable.styles.push('/testcafe-ui-styles.css');
     }
 
-    _getPayloadScript () {
+    async getPayloadScript () {
         var sharedJs = this.test.fixture.getSharedJs();
 
         return Mustache.render(TEST_RUN_TEMPLATE, {
@@ -57,7 +57,7 @@ export default class LegacyTestRun extends Session {
         });
     }
 
-    _getIframePayloadScript (iframeWithoutSrc) {
+    async getIframePayloadScript (iframeWithoutSrc) {
         var sharedJs      = this.test.fixture.getSharedJs();
         var payloadScript = Mustache.render(IFRAME_TEST_RUN_TEMPLATE, {
             sharedJs:               sharedJs,
