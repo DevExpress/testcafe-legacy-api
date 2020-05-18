@@ -42,18 +42,19 @@ export default class LegacyTestRun extends Session {
         var sharedJs = this.test.fixture.getSharedJs();
 
         return Mustache.render(TEST_RUN_TEMPLATE, {
-            stepNames:              JSON.stringify(this.test.stepData.names),
-            testSteps:              this.test.stepData.js,
-            sharedJs:               sharedJs,
-            testRunId:              this.id,
-            browserId:              this.browserConnection.id,
-            browserHeartbeatUrl:    this.browserConnection.heartbeatUrl,
-            browserStatusUrl:       this.browserConnection.statusDoneUrl,
-            takeScreenshots:        this.screenshotCapturer.enabled,
-            takeScreenshotsOnFails: this.opts.takeScreenshotsOnFails,
-            skipJsErrors:           this.opts.skipJsErrors,
-            nativeDialogsInfo:      JSON.stringify(this.nativeDialogsInfo),
-            selectorTimeout:        this.opts.selectorTimeout
+            stepNames:                  JSON.stringify(this.test.stepData.names),
+            testSteps:                  this.test.stepData.js,
+            sharedJs:                   sharedJs,
+            testRunId:                  this.id,
+            browserId:                  this.browserConnection.id,
+            browserHeartbeatUrl:        this.browserConnection.heartbeatUrl,
+            browserStatusUrl:           this.browserConnection.statusDoneUrl,
+            takeScreenshots:            this.screenshotCapturer.enabled,
+            takeScreenshotsOnFails:     this.opts.takeScreenshotsOnFails,
+            skipJsErrors:               this.opts.skipJsErrors,
+            nativeDialogsInfo:          JSON.stringify(this.nativeDialogsInfo),
+            selectorTimeout:            this.opts.selectorTimeout,
+            canUseDefaultWindowActions: JSON.stringify(await this.browserConnection.canUseDefaultWindowActions())
         });
     }
 

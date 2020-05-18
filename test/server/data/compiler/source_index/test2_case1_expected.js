@@ -4,7 +4,7 @@
     },
 
     function () {
-        ok(__get$(getFileManager().getFoldersTreeView().getVisibleNodes(), "length") > 1, '#14');
+        ok(getFileManager().getFoldersTreeView().getVisibleNodes().length > 1, '#14');
         act.click(getFileManager().getFolderExpandSelector("Raphael"), {
             alt: true
         }, '#15');
@@ -15,13 +15,13 @@
     },
 
     function () {
-        ok(__get$(getFileManager().getFiles(), "length") > 1, '#17');
+        ok(getFileManager().getFiles().length > 1, '#17');
         this.folderFiles1 = getFilesInnerMarkups();
         act.click(getFileManager().getFolderClickSelector("1928 - 1935"), '#18');
     },
 
     function () {
-        ok(__get$(getFileManager().getFiles(), "length") > 1, '#19');
+        ok(getFileManager().getFiles().length > 1, '#19');
         var folderFiles2 = getFilesInnerMarkups();
         notEq(this.folderFiles1, folderFiles2, '#20');
     }
