@@ -1,29 +1,30 @@
-var fs        = require('fs');
-var path      = require('path');
-var babel     = require('babel-core');
-var del       = require('del');
-var gulp      = require('gulp');
-var gulpBabel = require('gulp-babel');
-var gulpif    = require('gulp-if');
-var eslint    = require('gulp-eslint');
-var mocha     = require('gulp-mocha');
-var mustache  = require('gulp-mustache');
-var ll        = require('gulp-ll');
-var rename    = require('gulp-rename');
-var webmake   = require('gulp-webmake');
-var uglify    = require('gulp-uglify');
-var util      = require('gulp-util');
+const fs        = require('fs');
+const path      = require('path');
+const babel     = require('babel-core');
+const del       = require('del');
+const gulp      = require('gulp');
+const gulpStep  = require('gulp-step');
+const gulpBabel = require('gulp-babel');
+const gulpif    = require('gulp-if');
+const eslint    = require('gulp-eslint');
+const mocha     = require('gulp-mocha-simple');
+const mustache  = require('gulp-mustache');
+const ll        = require('gulp-ll-next');
+const rename    = require('gulp-rename');
+const webmake   = require('@belym.a.2105/gulp-webmake');
+const uglify    = require('gulp-uglify');
+const util      = require('gulp-util');
 
+gulpStep.install();
 
 ll.tasks('lint');
 
-
-gulp.task('clean', function (cb) {
-    del('lib', cb);
+gulp.task('clean', () => {
+    return del('lib');
 });
 
 // Lint
-gulp.task('lint', function () {
+gulp.task('lint', () => {
     return gulp
         .src([
             'src/**/*.js',
@@ -39,7 +40,7 @@ gulp.task('lint', function () {
 
 
 // Build
-gulp.task('templates', ['clean'], function () {
+gulp.step('templates', () => {
     return gulp
         .src([
             'src/**/*.mustache',
@@ -48,20 +49,20 @@ gulp.task('templates', ['clean'], function () {
         .pipe(gulp.dest('lib'));
 });
 
-gulp.task('server-scripts', ['clean'], function () {
+gulp.step('server-scripts', () => {
     return gulp
         .src(['src/**/*.js', '!src/client/**/*.js'])
         .pipe(gulpBabel())
         .pipe(gulp.dest('lib'));
 });
 
-gulp.task('client-scripts-bundle', ['clean'], function () {
+gulp.step('client-scripts-bundle', () => {
     return gulp
         .src(['src/client/index.js'], { base: 'src' })
         .pipe(webmake({
             sourceMap: false,
             transform: function (filename, code) {
-                var transformed = babel.transform(code, {
+                const transformed = babel.transform(code, {
                     sourceMap: false,
                     ast:       false,
                     filename:  filename,
@@ -81,8 +82,8 @@ gulp.task('client-scripts-bundle', ['clean'], function () {
         .pipe(gulp.dest('lib'));
 });
 
-gulp.task('client-scripts', ['client-scripts-bundle'], function () {
-    var script = { wrapper: 'src/client/index.js.wrapper.mustache', src: 'lib/client/index.js' };
+gulp.step('client-scripts-template-render', () => {
+    const script = { wrapper: 'src/client/index.js.wrapper.mustache', src: 'lib/client/index.js' };
 
     return gulp
         .src(script.wrapper)
@@ -92,11 +93,18 @@ gulp.task('client-scripts', ['client-scripts-bundle'], function () {
         .pipe(gulp.dest(path.dirname(script.src)));
 });
 
-gulp.task('build', ['server-scripts', 'client-scripts', 'templates', 'lint']);
+gulp.step('client-scripts', gulp.series('client-scripts-bundle', 'client-scripts-template-render'));
 
+gulp.task('fast-build', gulp.series(
+    'clean',
+    gulp.parallel('server-scripts', 'client-scripts', 'templates'))
+);
+
+gulp.task('build', gulp.parallel('fast-build', 'lint'));
 
 // Test
-gulp.task('test', ['build'], function () {
+
+gulp.step('test-server-run', () => {
     return gulp
         .src('test/server/*-test.js')
         .pipe(mocha({
@@ -105,3 +113,5 @@ gulp.task('test', ['build'], function () {
             timeout:  typeof v8debug === 'undefined' ? 2000 : Infinity // NOTE: disable timeouts in debug
         }));
 });
+
+gulp.task('test', gulp.series('build', 'test-server-run'));

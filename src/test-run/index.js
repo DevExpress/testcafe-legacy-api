@@ -38,26 +38,27 @@ export default class LegacyTestRun extends Session {
         this.injectable.styles.push('/testcafe-ui-styles.css');
     }
 
-    _getPayloadScript () {
+    async getPayloadScript () {
         var sharedJs = this.test.fixture.getSharedJs();
 
         return Mustache.render(TEST_RUN_TEMPLATE, {
-            stepNames:              JSON.stringify(this.test.stepData.names),
-            testSteps:              this.test.stepData.js,
-            sharedJs:               sharedJs,
-            testRunId:              this.id,
-            browserId:              this.browserConnection.id,
-            browserHeartbeatUrl:    this.browserConnection.heartbeatUrl,
-            browserStatusUrl:       this.browserConnection.statusDoneUrl,
-            takeScreenshots:        this.screenshotCapturer.enabled,
-            takeScreenshotsOnFails: this.opts.takeScreenshotsOnFails,
-            skipJsErrors:           this.opts.skipJsErrors,
-            nativeDialogsInfo:      JSON.stringify(this.nativeDialogsInfo),
-            selectorTimeout:        this.opts.selectorTimeout
+            stepNames:                  JSON.stringify(this.test.stepData.names),
+            testSteps:                  this.test.stepData.js,
+            sharedJs:                   sharedJs,
+            testRunId:                  this.id,
+            browserId:                  this.browserConnection.id,
+            browserHeartbeatUrl:        this.browserConnection.heartbeatUrl,
+            browserStatusUrl:           this.browserConnection.statusDoneUrl,
+            takeScreenshots:            this.screenshotCapturer.enabled,
+            takeScreenshotsOnFails:     this.opts.takeScreenshotsOnFails,
+            skipJsErrors:               this.opts.skipJsErrors,
+            nativeDialogsInfo:          JSON.stringify(this.nativeDialogsInfo),
+            selectorTimeout:            this.opts.selectorTimeout,
+            canUseDefaultWindowActions: JSON.stringify(await this.browserConnection.canUseDefaultWindowActions())
         });
     }
 
-    _getIframePayloadScript (iframeWithoutSrc) {
+    async getIframePayloadScript (iframeWithoutSrc) {
         var sharedJs      = this.test.fixture.getSharedJs();
         var payloadScript = Mustache.render(IFRAME_TEST_RUN_TEMPLATE, {
             sharedJs:               sharedJs,
