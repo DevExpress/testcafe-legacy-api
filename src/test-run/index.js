@@ -49,18 +49,23 @@ export default class LegacyTestRun extends Session {
             browserId:                  this.browserConnection.id,
             browserHeartbeatUrl:        this.browserConnection.heartbeatUrl,
             browserStatusUrl:           this.browserConnection.statusDoneUrl,
+            browserInitScriptUrl:       JSON.stringify(this.browserConnection.initScriptUrl),
+            browserSetupWindowUrl:      JSON.stringify(this.browserConnection.setupWindowUrl),
             takeScreenshots:            this.screenshotCapturer.enabled,
             takeScreenshotsOnFails:     this.opts.takeScreenshotsOnFails,
             skipJsErrors:               this.opts.skipJsErrors,
             nativeDialogsInfo:          JSON.stringify(this.nativeDialogsInfo),
             selectorTimeout:            this.opts.selectorTimeout,
-            canUseDefaultWindowActions: JSON.stringify(await this.browserConnection.canUseDefaultWindowActions())
+            canUseDefaultWindowActions: JSON.stringify(await this.browserConnection.canUseDefaultWindowActions()),
+            isLocalBrowser:             JSON.stringify(await this.browserConnection.isLocalBrowser())
         });
     }
 
     async getIframePayloadScript (iframeWithoutSrc) {
         var sharedJs      = this.test.fixture.getSharedJs();
         var payloadScript = Mustache.render(IFRAME_TEST_RUN_TEMPLATE, {
+            testRunId:              this.id,
+            browserId:              this.browserConnection.id,
             sharedJs:               sharedJs,
             takeScreenshotsOnFails: this.opts.takeScreenshotsOnFails,
             skipJsErrors:           this.opts.skipJsErrors,
