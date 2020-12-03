@@ -1,5 +1,5 @@
 import Promise from 'pinkie';
-import RequireAnalyzer from './legacy/analysis/require_analyzer';
+import * as RequireAnalyzer from './legacy/analysis/require_analyzer';
 import remove from '../utils/array-remove';
 
 

@@ -1,7 +1,7 @@
-var util     = require('util'),
-    ErrCodes = require('./err_codes');
+import util from 'util';
+import * as ErrCodes from './err_codes';
 
-module.exports = function (err) {
+export default function (err) {
     var msg = 'UNKNOWN_ERROR',
         m   = function () {
             msg = util.format.apply(this, arguments);

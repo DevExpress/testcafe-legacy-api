@@ -1,9 +1,9 @@
-var Ast = require('./../ast'),
-    Common = require('./../common'),
-    ErrCodes = require('./../err_codes'),
-    CallAnalyzer = require('./call_analyzer');
+import * as Ast from '../ast';
+import * as Common from '../common';
+import * as ErrCodes from '../err_codes';
+import * as CallAnalyzer from './call_analyzer';
 
-var StepsAnalyzer = module.exports = function (isMixin, rawStepData, errs, sourceIndex) {
+export default function StepsAnalyzer (isMixin, rawStepData, errs, sourceIndex) {
     this.rawStepData = rawStepData;
     this.isMixin = isMixin;
     this.errs = errs;

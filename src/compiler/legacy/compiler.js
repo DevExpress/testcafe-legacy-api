@@ -1,17 +1,18 @@
-var path = require('path'),
-    fs = require('fs'),
-    util = require('util'),
-    astProcessor = require('../tools/uglify-js/uglify-js').uglify,
-    javascriptParser = require('../tools/uglify-js/uglify-js').parser,
-    async = require('async'),
-    stripBom = require('strip-bom'),
-    Promise = require('pinkie'),
-    Common = require('./common'),
-    Ast = require('./ast'),
-    CallAnalyzer = require('./analysis/call_analyzer'),
-    StepsAnalyzer = require('./analysis/steps_analyzer'),
-    ErrCodes = require('./err_codes'),
-    promisify = require('../../utils/promisify');
+import path from 'path';
+import fs from 'fs';
+import util from 'util';
+import async from 'async';
+import stripBom from 'strip-bom';
+import Promise from 'pinkie';
+import { uglify as astProcessor } from '../tools/uglify-js/uglify-js';
+import { parser as javascriptParser } from '../tools/uglify-js/uglify-js';
+import * as Common from './common';
+import * as Ast from './ast';
+import * as CallAnalyzer from './analysis/call_analyzer';
+import StepsAnalyzer from './analysis/steps_analyzer';
+import * as ErrCodes from './err_codes';
+import promisify from '../../utils/promisify';
+
 
 var readFile = promisify(fs.readFile);
 
@@ -24,7 +25,7 @@ function multySplice(arr, index, deleteCount, itemsToInsert) {
 }
 
 //Compiler
-var Compiler = module.exports = function (src, filename, modules, requireReader, sourceIndex, hammerheadProcessScript) {
+export default function Compiler (src, filename, modules, requireReader, sourceIndex, hammerheadProcessScript) {
     this.walker = astProcessor.ast_walker();
     this.hammerheadProcessScript = hammerheadProcessScript;
 

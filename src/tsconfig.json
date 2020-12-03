@@ -1,0 +1,12 @@
+{
+  "exclude": ["./client"],
+  "compilerOptions": {
+    "outDir": "../lib",
+    "target": "es2017",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "checkJs": false,
+    "allowSyntheticDefaultImports": true
+  }
+}

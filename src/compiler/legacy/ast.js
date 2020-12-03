@@ -1,13 +1,14 @@
-var util = require('util'),
-    fs = require('fs'),
-    javascriptParser = require('../tools/uglify-js/uglify-js').parser,
-    ErrCodes = require('./err_codes'),
-    stripBom = require('strip-bom'),
-    promisify = require('../../utils/promisify');
+import util from 'util';
+import fs from 'fs';
+import stripBom from 'strip-bom';
+import { parser as javascriptParser } from '../tools/uglify-js/uglify-js';
+import * as ErrCodes from './err_codes';
+import promisify from '../../utils/promisify';
+
 
 var readFile = promisify(fs.readFile);
 
-exports.construct = function (fileName, ownerFilename, callback) {
+export function construct (fileName, ownerFilename, callback) {
     readFile(fileName)
         .then(data => {
             data = stripBom(data);
@@ -33,7 +34,7 @@ exports.construct = function (fileName, ownerFilename, callback) {
         });
 };
 
-var constructFromCode = exports.constructFromCode = function (code, fileName) {
+export function constructFromCode (code, fileName) {
     var ast = null;
 
     code = code.toString().trim();
@@ -58,11 +59,11 @@ var constructFromCode = exports.constructFromCode = function (code, fileName) {
     };
 };
 
-var getEntryName = exports.getEntryName = function (entry) {
+export function getEntryName (entry) {
     return typeof entry[0] === 'object' ? entry[0].name : entry[0];
 };
 
-exports.isPathMatch = function (expectedPath, actualPath, ensureLast) {
+export function isPathMatch (expectedPath, actualPath, ensureLast) {
     if (expectedPath.length !== actualPath.length - 1)
         return false;
 
@@ -81,7 +82,7 @@ exports.isPathMatch = function (expectedPath, actualPath, ensureLast) {
     return true;
 };
 
-exports.getAncestorByName = function (name, currentAstPath) {
+export function getAncestorByName (name, currentAstPath) {
     if (currentAstPath.length > 1) {
         for (var i = currentAstPath.length - 2; i >= 0; i--) {
             if (getEntryName(currentAstPath[i]) === name)
@@ -92,7 +93,7 @@ exports.getAncestorByName = function (name, currentAstPath) {
     return null;
 };
 
-exports.getCurrentSrcLineNum = function (currentAst) {
+export function getCurrentSrcLineNum (currentAst) {
     //NOTE: Try to obtain the current line number. currentAst may not contain additional info for unknown reason.
     for (var i = currentAst.length - 1; i >= 0; i--) {
         if (currentAst[i]) {
@@ -107,7 +108,7 @@ exports.getCurrentSrcLineNum = function (currentAst) {
     return 0;
 };
 
-exports.getRemainderAst = function (ast) {
+export function getRemainderAst (ast) {
     //NOTE: We traverse through statements of the 'toplevel' and
     //just remove those that are marked with 'remove' flag.
     //Everything that's left is a shared code.
@@ -121,11 +122,11 @@ exports.getRemainderAst = function (ast) {
     return astBranches.length ? ['toplevel', astBranches] : null;
 };
 
-exports.getSrcCodePosFromPath = function (astPath) {
-    return exports.getSrcCodePosFromEntry(astPath[astPath.length - 1]);
+export function getSrcCodePosFromPath (astPath) {
+    return getSrcCodePosFromEntry(astPath[astPath.length - 1]);
 };
 
-exports.getSrcCodePosFromEntry = function (astEntry) {
+export function getSrcCodePosFromEntry (astEntry) {
     var pos = {
         start: 0,
         end: 0

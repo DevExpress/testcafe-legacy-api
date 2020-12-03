@@ -1,8 +1,8 @@
-var astProcessor  = require('../../tools/uglify-js/uglify-js').uglify,
-    Common        = require('./../common'),
-    Ast           = require('./../ast'),
-    CallAnalyzer  = require('./call_analyzer'),
-    StepsAnalyzer = require('./steps_analyzer');
+import { uglify as astProcessor } from '../../tools/uglify-js/uglify-js';
+import * as Common        from '../common';
+import * as Ast           from '../ast';
+import * as CallAnalyzer  from './call_analyzer';
+import StepsAnalyzer from './steps_analyzer';
 
 function extractMixins (ast, descriptor, errs, sourceIndex) {
     var walker             = astProcessor.ast_walker(),
@@ -51,7 +51,7 @@ function analyzeRequireCode (requireAst, descriptor, errs, sourceIndex) {
     }
 }
 
-exports.run = function (requireFilename, ownerFilename, sourceIndex, hammerheadProcessScript, callback) {
+export function run (requireFilename, ownerFilename, sourceIndex, hammerheadProcessScript, callback) {
     var errs       = [],
         descriptor = {
             hasErrs:           false,

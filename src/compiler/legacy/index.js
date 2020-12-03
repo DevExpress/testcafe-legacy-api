@@ -1,2 +1,2 @@
-exports.Compiler  = require('./compiler');
-exports.getErrMsg = require('./get_err_msg');
+export { default as Compiler } from './compiler';
+export { default as getErrMsg } from './get_err_msg';
