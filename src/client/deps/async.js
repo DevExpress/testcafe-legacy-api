@@ -11,7 +11,6 @@ export default async;
         previous_async = root.async;
 */
     //if (typeof module !== 'undefined' && module.exports) {
-    module.exports = async;
     //}
     /*  else {
           console.log('222');

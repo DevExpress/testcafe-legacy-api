@@ -2,7 +2,7 @@ import hammerhead from './deps/hammerhead';
 import { domUtils } from './deps/testcafe-core';
 
 var nativeMethods = hammerhead.nativeMethods;
-var processScript = hammerhead.get('../processing/script').processScript;
+var processScript = hammerhead.processScript;
 
 
 export var jQuery = null;
@@ -3854,7 +3854,7 @@ export function init (window, undefined) {
                                         if ( jQuery.Deferred.getStackHook ) {
                                             process.stackTrace = jQuery.Deferred.getStackHook();
                                         }
-                                        window.setTimeout( process );
+                                        nativeMethods.setTimeout.call(window, process);
                                     }
                                 };
                             }
@@ -4040,9 +4040,9 @@ export function init (window, undefined) {
 
 
         jQuery.readyException = function( error ) {
-            window.setTimeout( function() {
+            nativeMethods.setTimeout.call(window, function() {
                 throw error;
-            } );
+            });
         };
 
 
@@ -4113,7 +4113,7 @@ export function init (window, undefined) {
             ( document.readyState !== "loading" && !document.documentElement.doScroll ) ) {
 
             // Handle it asynchronously to allow scripts the opportunity to delay ready
-            window.setTimeout( jQuery.ready );
+            nativeMethods.setTimeout.call(window, jQuery.ready );
 
         } else {
 
@@ -4805,7 +4805,12 @@ export function init (window, undefined) {
             temp = doc.body.appendChild( doc.createElement( nodeName ) );
             display = jQuery.css( temp, "display" );
 
-            temp.parentNode.removeChild( temp );
+            // NOTE: in Firefox, "body.insertBefore(container, body.firstChild)"	
+            // sometimes doesn't insert a container (it looks like it depends on	
+            // the current page loading phase). Since this behavior is unstable,	
+            // we should check if the body contains the container	
+            if (temp.parentNode && temp.parentNode.contains(temp))
+                temp.parentNode.removeChild( temp );
 
             if ( display === "none" ) {
                 display = "block";
@@ -6476,7 +6481,8 @@ export function init (window, undefined) {
                 div.style.position = "absolute";
                 scrollboxSizeVal = roundPixelMeasures( div.offsetWidth / 3 ) === 12;
 
-                documentElement.removeChild( container );
+                if (documentElement.contains(container))
+                    documentElement.removeChild( container );
 
                 // Nullify the div so it wouldn't be stored in the memory and
                 // it will also be a sign that checks already performed
@@ -6549,7 +6555,8 @@ export function init (window, undefined) {
                         trStyle = window.getComputedStyle( tr );
                         reliableTrDimensionsVal = parseInt( trStyle.height ) > 3;
 
-                        documentElement.removeChild( table );
+                        if (documentElement.contains(table))
+                            documentElement.removeChild( table );
                     }
                     return reliableTrDimensionsVal;
                 }
@@ -7260,7 +7267,7 @@ export function init (window, undefined) {
                 if ( document.hidden === false && window.requestAnimationFrame ) {
                     window.requestAnimationFrame( schedule );
                 } else {
-                    window.setTimeout( schedule, jQuery.fx.interval );
+                    nativeMethods.setTimeout.call(window, schedule, jQuery.fx.interval );
                 }
 
                 jQuery.fx.tick();
@@ -7269,7 +7276,7 @@ export function init (window, undefined) {
 
         // Animations created synchronously will run synchronously
         function createFxNow() {
-            window.setTimeout( function() {
+            nativeMethods.setTimeout.call(window, function() {
                 fxNow = undefined;
             } );
             return ( fxNow = Date.now() );
@@ -7932,7 +7939,7 @@ export function init (window, undefined) {
             type = type || "fx";
 
             return this.queue( type, function( next, hooks ) {
-                var timeout = window.setTimeout( next, time );
+                var timeout = nativeMethods.setTimeout.call(window, next, time );
                 hooks.stop = function() {
                     window.clearTimeout( timeout );
                 };
@@ -8740,7 +8747,8 @@ export function init (window, undefined) {
                                 lastElement.addEventListener( type, stopPropagationCallback );
                             }
 
-                            elem[ type ]();
+                            if (!domUtils.isDocument(elem) || type !== 'ready')
+                                elem[type]();
 
                             if ( event.isPropagationStopped() ) {
                                 lastElement.removeEventListener( type, stopPropagationCallback );
@@ -9661,7 +9669,7 @@ export function init (window, undefined) {
 
                     // Timeout
                     if ( s.async && s.timeout > 0 ) {
-                        timeoutTimer = window.setTimeout( function() {
+                        timeoutTimer = nativeMethods.setTimeout.call(window, function() {
                             jqXHR.abort( "timeout" );
                         }, s.timeout );
                     }
@@ -10070,7 +10078,7 @@ export function init (window, undefined) {
                                     // but that will not handle a native abort
                                     // Also, save errorCallback to a variable
                                     // as xhr.onerror cannot be accessed
-                                    window.setTimeout( function() {
+                                    nativeMethods.setTimeout.call(window, function() {
                                         if ( callback ) {
                                             errorCallback();
                                         }
@@ -10840,9 +10848,14 @@ export function init (window, undefined) {
                 window.$ = _$;
             }
 
+            if (!window.$)
+                delete window.$;
+
             if ( deep && window.jQuery === jQuery ) {
                 window.jQuery = _jQuery;
             }
+            if (!window.jQuery)	
+                delete window.jQuery;
 
             return jQuery;
         };

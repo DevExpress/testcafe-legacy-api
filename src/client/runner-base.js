@@ -3,7 +3,7 @@ import testCafeCore from './deps/testcafe-core';
 import testCafeUI from './deps/testcafe-ui';
 import StepIterator from './step-iterator.js';
 import AssertionsAPI from './api/assertions';
-import * as actionsAPI from './api/actions';
+import actionsAPI from './api/actions';
 import * as dialogsAPI from './api/native-dialogs';
 import initAutomation from './init-automation';
 import SETTINGS from './settings';

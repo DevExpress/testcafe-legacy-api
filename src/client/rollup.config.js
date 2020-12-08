@@ -22,7 +22,10 @@ export default {
         globals: GLOBALS,
         // NOTE: 'use strict' in our scripts can break user code
         // https://github.com/DevExpress/testcafe/issues/258
-        strict:  false
+        strict:  false,
+        // NOTE: we cannot freeze namespaces since RunnerBase extends actionsAPI
+        // https://github.com/DevExpress/testcafe-legacy-api/blob/60cd17a636359d14e4ffbec4316421e9ca1ab3b5/src/client/runner-base.js#L82
+        freeze:  false
     },
 
     plugins: [
