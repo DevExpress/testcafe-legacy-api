@@ -1,7 +1,7 @@
 import { uglify as astProcessor } from '../../tools/uglify-js/uglify-js';
-import * as Common        from '../common';
-import * as Ast           from '../ast';
-import * as CallAnalyzer  from './call_analyzer';
+import * as Common from '../common';
+import * as Ast from '../ast';
+import * as CallAnalyzer from './call_analyzer';
 import StepsAnalyzer from './steps_analyzer';
 
 function extractMixins (ast, descriptor, errs, sourceIndex) {
