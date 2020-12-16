@@ -1,13 +1,13 @@
-var expect                  = require('chai').expect;
-var path                    = require('path');
-var fs                      = require('fs');
-var read                    = require('read-file-relative').readSync;
-var stripBom                = require('strip-bom');
-var multl                   = require('multiline');
-var Promise                 = require('pinkie');
-var hammerheadProcessScript = require('testcafe-hammerhead').processScript;
+var expect                        = require('chai').expect;
+var path                          = require('path');
+var fs                            = require('fs');
+var read                          = require('read-file-relative').readSync;
+var stripBom                      = require('strip-bom');
+var multl                         = require('multiline');
+var Promise                       = require('pinkie');
+var hammerheadProcessScript       = require('testcafe-hammerhead').processScript;
 var { Compiler: CompilerAdapter } = require('../../lib');
-var RequireAnalyzer = require('../../lib/compiler/legacy/analysis/require_analyzer');
+var RequireAnalyzer               = require('../../lib/compiler/legacy/analysis/require_analyzer');
 
 
 describe('Legacy compiler adapter', function () {
