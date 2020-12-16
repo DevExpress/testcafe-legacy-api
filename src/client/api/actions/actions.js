@@ -1,6 +1,7 @@
-import hammerhead from '../deps/hammerhead';
-import testCafeCore from '../deps/testcafe-core';
-import testCafeUI from '../deps/testcafe-ui';
+import hammerhead from '../../deps/hammerhead';
+import testCafeCore from '../../deps/testcafe-core';
+import testCafeUI from '../../deps/testcafe-ui';
+
 import {
     getOffsetOptions as getAutomationOffsetOptions,
     MouseOptions,
@@ -8,13 +9,14 @@ import {
     TypeOptions,
     calculateSelectTextArguments,
     ERROR_TYPES as AUTOMATION_ERROR_TYPES
-} from '../deps/testcafe-automation';
-import { getAutomations } from '../automation-storage';
-import SETTINGS from '../settings';
-import * as sourceIndexTracker from '../source-index';
-import async from '../deps/async';
-import * as sandboxedJQuery from '../sandboxed-jquery';
-import ERROR_TYPE from '../../test-run-error/type';
+} from '../../deps/testcafe-automation';
+
+import { getAutomations } from '../../automation-storage';
+import SETTINGS from '../../settings';
+import * as sourceIndexTracker from '../../source-index';
+import async from '../../deps/async';
+import * as sandboxedJQuery from '../../sandboxed-jquery';
+import ERROR_TYPE from '../../../test-run-error/type';
 import isJQueryObj from 'is-jquery-obj';
 
 var nativeMethods = hammerhead.nativeMethods;
@@ -875,20 +877,3 @@ export function screenshot (filePath) {
 export function setElementAvailabilityWaitingTimeout (ms) {
     SETTINGS.get().SELECTOR_TIMEOUT = ms;
 }
-
-//NOTE: add sourceIndex wrapper
-sourceIndexTracker.wrapTrackableMethods(exports, [
-    'click',
-    'rclick',
-    'dblclick',
-    'drag',
-    'type',
-    'wait',
-    'waitFor',
-    'hover',
-    'press',
-    'select',
-    'navigateTo',
-    'upload',
-    'screenshot'
-]);

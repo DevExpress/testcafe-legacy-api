@@ -21,7 +21,7 @@ export function wrapTrackableMethods (methodsHost, methodNames) {
                 //NOTE: check if we actually have sourc index. Because in some edge case it can't be
                 //calcualted by compiler
                 if (idxMatch) {
-                    exports.currentIndex = parseInt(idxMatch[1], 10);
+                    currentIndex = parseInt(idxMatch[1], 10);
                     args.pop();
                 }
             }

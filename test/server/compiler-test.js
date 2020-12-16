@@ -1,11 +1,11 @@
-var expect                  = require('chai').expect;
-var fs                      = require('fs');
-var read                    = require('read-file-relative').readSync;
-var Promise                 = require('pinkie');
-var hammerheadProcessScript = require('testcafe-hammerhead').processScript;
-var Compiler                = require('../../lib/compiler/legacy/compiler');
-var RequireReader           = require('../../lib/compiler/require-reader');
-var ERR_CODE                = require('../../lib/compiler/legacy/err_codes');
+var expect                     = require('chai').expect;
+var fs                         = require('fs');
+var read                       = require('read-file-relative').readSync;
+var Promise                    = require('pinkie');
+var hammerheadProcessScript    = require('testcafe-hammerhead').processScript;
+var { default: Compiler }      = require('../../lib/compiler/legacy/compiler');
+var { default: RequireReader } = require('../../lib/compiler/require-reader');
+var ERR_CODE                   = require('../../lib/compiler/legacy/err_codes');
 
 
 function compile (filename, opts) {

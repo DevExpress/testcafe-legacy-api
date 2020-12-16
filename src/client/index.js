@@ -11,6 +11,7 @@ import * as jQueryDataMethodProxy from './jquery-extensions/data-proxy';
 import * as sandboxedJQuery from './sandboxed-jquery';
 import * as transport from './transport';
 
+const exports = {};
 
 exports.SETTINGS              = SETTINGS;
 exports.Runner                = Runner;
@@ -20,8 +21,6 @@ exports.extendJQuerySelectors = extendJQuerySelectors;
 exports.jQueryDataMethodProxy = jQueryDataMethodProxy;
 exports.sandboxedJQuery       = sandboxedJQuery;
 exports.transport             = transport;
-
-exports.get = require;
 
 Object.defineProperty(window, '%testCafeLegacyRunner%', {
     enumerable:   false,

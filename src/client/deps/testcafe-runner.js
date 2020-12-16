@@ -1,1 +1,2 @@
-export default window['%testCafeLegacyRunner%'];
+export * from 'testcafe-legacy-runner';
+export { default } from 'testcafe-legacy-runner';

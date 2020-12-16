@@ -1,8 +1,8 @@
-var astProcessor = require('../../tools/uglify-js/uglify-js').uglify,
-    SharedConst = require('../const'),
-    Common = require('./../common'),
-    Ast = require('./../ast'),
-    ErrCodes = require('./../err_codes');
+import { uglify as astProcessor } from '../../tools/uglify-js/uglify-js';
+import SharedConst from '../const';
+import * as Common from '../common';
+import * as Ast from '../ast';
+import * as ErrCodes from '../err_codes';
 
 function getLineIndent(line, baseIndent) {
     var lineIndent = 0;
@@ -175,7 +175,7 @@ CallAnalyzer.prototype.run = function () {
     return this.astWasModified;
 };
 
-exports.run = function (ast, filename, errs, isSharedCode, sourceIndex, src) {
+export function run (ast, filename, errs, isSharedCode, sourceIndex, src) {
     var analyzer = new CallAnalyzer(ast, filename, errs, isSharedCode, sourceIndex, src);
     return analyzer.run();
 };

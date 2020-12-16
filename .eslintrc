@@ -1,5 +1,12 @@
 {
-  "parser": "babel-eslint",
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2018
+  },
   "extends": "eslint:recommended",
   "rules": {
     "no-alert": 2,
@@ -80,8 +87,5 @@
     "space-before-function-paren": [2, "always"],
     "no-use-before-define" : [2, "nofunc"],
     "handle-callback-err": 0
-  },
-  "env": {
-    "node": true
   }
 }
