@@ -1,6 +1,7 @@
 import hammerhead from '../../deps/hammerhead';
 import testCafeCore from '../../deps/testcafe-core';
 import testCafeUI from '../../deps/testcafe-ui';
+
 import {
     getOffsetOptions as getAutomationOffsetOptions,
     MouseOptions,
@@ -9,6 +10,7 @@ import {
     calculateSelectTextArguments,
     ERROR_TYPES as AUTOMATION_ERROR_TYPES
 } from '../../deps/testcafe-automation';
+
 import { getAutomations } from '../../automation-storage';
 import SETTINGS from '../../settings';
 import * as sourceIndexTracker from '../../source-index';
