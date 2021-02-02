@@ -1,6 +1,6 @@
 {
   "name": "testcafe-legacy-api",
-  "version": "4.2.3",
+  "version": "4.2.4",
   "description": "Legacy API support for TestCafe",
   "main": "lib/index.js",
   "scripts": {
@@ -58,7 +58,7 @@
     "pinkie": "^2.0.1",
     "read-file-relative": "^1.2.0",
     "strip-bom": "^2.0.0",
-    "testcafe-hammerhead": ">=19.1.1"
+    "testcafe-hammerhead": ">=19.4.0"
   },
   "files": [
     "lib"
