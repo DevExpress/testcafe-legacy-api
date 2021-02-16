@@ -15,16 +15,16 @@ export default class TestContextStorage {
     }
 
     _loadFromStorage () {
-        var savedData = this.storage.getItem(this.storageKey);
+        var savedData = nativeMethods.storageGetItem.call(this.storage, this.storageKey);
 
         if (savedData) {
             this.data = JSON.parse(savedData);
-            this.storage.removeItem(this.storageKey);
+            nativeMethods.storageRemoveItem.call(this.storage, this.storageKey);
         }
     }
 
     _saveToStorage () {
-        this.storage.setItem(this.storageKey, JSON.stringify(this.data));
+        nativeMethods.storageSetItem.call(this.storage, this.storageKey, JSON.stringify(this.data));
     }
 
     get () {
@@ -42,6 +42,6 @@ export default class TestContextStorage {
     }
 
     dispose () {
-        this.storage.removeItem(this.storageKey);
+        nativeMethods.storageRemoveItem.call(this.storage, this.storageKey);
     }
 };

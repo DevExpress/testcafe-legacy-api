@@ -52,7 +52,7 @@ gulp.step('server-scripts', () => {
 });
 
 gulp.step('client-scripts-bundle', () => {
-    return spawn('rollup -c', { shell: true, stdio: 'inherit', cwd: path.join(__dirname, 'src/client') });
+    return spawn('npx rollup -c', { shell: true, stdio: 'inherit', cwd: path.join(__dirname, 'src/client') });
 });
 
 gulp.step('client-scripts-template-render', () => {
