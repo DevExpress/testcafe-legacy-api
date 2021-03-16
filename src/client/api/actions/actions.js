@@ -285,7 +285,7 @@ export function parseActionArgument (item, actionName) {
     else if (actionName && actionName === 'select' && domUtils.isTextNode(item))
         return [item];
     else if (typeof item === 'string')
-        return arrayUtils.toArray(sandboxedJQuery.jQuery(item));
+        return arrayUtils.from(sandboxedJQuery.jQuery(item));
     else if (isJQueryObj(item)) {
         item.each(function () {
             elements.push(this);
@@ -510,7 +510,7 @@ export function select () {
     var actionStarted       = false;
     var actionType          = 'select';
     var elements            = arguments[0] ? ensureArray(arguments[0]) : null;
-    var args                = arrayUtils.toArray(arguments).slice(1);
+    var args                = arrayUtils.from(arguments).slice(1);
     var firstArg            = args ? args[0] : null;
     var startNode           = null;
     var endNode             = null;

@@ -65,8 +65,8 @@ function getObjectsDiff (actual, expected, comparablePath, checkedElements) {
         if (!(isElementsCollection(actual)) || !(isElementsCollection(expected)))
             return createDiffObject(actual, expected);
 
-        var actualAsArray   = arrayUtils.toArray(actual),
-            expectedAsArray = arrayUtils.toArray(expected);
+        var actualAsArray   = arrayUtils.from(actual),
+            expectedAsArray = arrayUtils.from(expected);
 
         return getArraysDiff(actualAsArray, expectedAsArray) ? createDiffObject(actualAsArray, expectedAsArray) : null;
     }
@@ -81,7 +81,7 @@ function getObjectsDiff (actual, expected, comparablePath, checkedElements) {
     //jQuery objects
     if (isJQueryObj(actual) || isJQueryObj(expected)) {
         if (!isJQueryObj(actual) || !isJQueryObj(expected) ||
-            getArraysDiff(arrayUtils.toArray(actual), arrayUtils.toArray(expected)))
+            getArraysDiff(arrayUtils.from(actual), arrayUtils.from(expected)))
             return createDiffObject(actual, expected);
         return null;
     }
@@ -284,7 +284,7 @@ function getDescription (obj, doNotWrapStr) {
 
     //jQuery objects
     if (isJQueryObj(obj))
-        return getArrayDescription(arrayUtils.toArray(obj));
+        return getArrayDescription(arrayUtils.from(obj));
 
     if (obj === null)
         return 'null';
