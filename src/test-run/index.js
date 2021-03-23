@@ -12,7 +12,7 @@ const IFRAME_TEST_RUN_TEMPLATE = read('../client/test-run/iframe.js.mustache');
 
 
 export default class LegacyTestRun extends Session {
-    constructor (test, browserConnection, screenshotCapturer, warningLog, opts) {
+    constructor ({ test, browserConnection, screenshotCapturer, globalWarningLog, opts }) { // eslint-disable-line no-unused-vars
         var uploadsRoot = path.dirname(test.fixture.path);
 
         super(uploadsRoot);
