@@ -120,6 +120,10 @@ export default class LegacyTestRun extends Session {
         // NOTE: required to keep API similar to TestRun. Just do nothing here.
         this.emit('start');
     }
+    
+    async initialize () {
+        // NOTE: required to keep API compatible to the regular TestRun
+    }
 }
 
 // Service message handlers
