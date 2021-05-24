@@ -1,6 +1,6 @@
 {
   "name": "testcafe-legacy-api",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Legacy API support for TestCafe",
   "main": "lib/index.js",
   "scripts": {
