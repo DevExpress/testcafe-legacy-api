@@ -11,11 +11,15 @@ const TEST_RUN_TEMPLATE        = read('../client/test-run/index.js.mustache');
 const IFRAME_TEST_RUN_TEMPLATE = read('../client/test-run/iframe.js.mustache');
 
 
+const ASYNC_SERVICE_MESSAGE_HANDLERS = [COMMAND.takeScreenshot, COMMAND.fatalError, COMMAND.assertionFailed, COMMAND.done];
+
 export default class LegacyTestRun extends Session {
-    constructor ({ test, browserConnection, screenshotCapturer, globalWarningLog, opts }) { // eslint-disable-line no-unused-vars
+    constructor ({ test, browserConnection, screenshotCapturer, opts }) { // eslint-disable-line no-unused-vars
         var uploadsRoot = path.dirname(test.fixture.path);
 
         super(uploadsRoot);
+
+        this.methodLock = Promise.resolve();
 
         this.unstable = false;
 
@@ -36,6 +40,18 @@ export default class LegacyTestRun extends Session {
         this.injectable.scripts.push('/testcafe-automation.js');
         this.injectable.scripts.push('/testcafe-legacy-runner.js');
         this.injectable.styles.push('/testcafe-ui-styles.css');
+    }
+
+
+    static makeBlocking (target, methodName) {
+        const method = target[methodName];
+
+        target[methodName] = function (...args) {
+            this.methodLock = this.methodLock
+                .then(() => method.apply(this, args));
+
+            return this.methodLock;
+        };
     }
 
     async getPayloadScript () {
@@ -69,6 +85,17 @@ export default class LegacyTestRun extends Session {
         });
 
         return iframeWithoutSrc ? 'var isIFrameWithoutSrc = true;' + payloadScript : payloadScript;
+    }
+
+    async _takeScreenshot (msg) {
+        try {
+            return await this.screenshotCapturer.captureAction(msg);
+        }
+        catch (e) {
+            // NOTE: swallow the error silently if we can't take screenshots for some
+            // reason (e.g. we don't have permissions to write a screenshot file).
+            return null;
+        }
     }
 
     async _addError (err) {
@@ -124,60 +151,55 @@ export default class LegacyTestRun extends Session {
     async initialize () {
         // NOTE: required to keep API compatible to the regular TestRun
     }
+
+    // Service message handlers
+    // Asynchronous
+    [COMMAND.takeScreenshot] (msg) {
+        return this._takeScreenshot(msg);
+    }
+
+    [COMMAND.fatalError] (msg) {
+        return this._fatalError(msg.err);
+    }
+
+    [COMMAND.assertionFailed] (msg) {
+        return this._addError(msg.err);
+    }
+
+    [COMMAND.done] () {
+        this.emit('done');
+    }
+
+    // Synchronous
+    [COMMAND.setStepsSharedData] (msg) {
+        this.stepsSharedData = msg.stepsSharedData;
+    }
+
+    [COMMAND.getStepsSharedData] () {
+        return this.stepsSharedData;
+    }
+
+    [COMMAND.getAndUncheckFileDownloadingFlag] () {
+        var isFileDownloading = this.isFileDownloading;
+
+        this.isFileDownloading = false;
+
+        return isFileDownloading;
+    }
+
+    [COMMAND.waitForFileDownload] () {
+        // NOTE: required to keep API similar to TestRun. Just do nothing here.
+    }
+
+    [COMMAND.nativeDialogsInfoSet] (msg) {
+        if (msg.timeStamp >= this.nativeDialogsInfoTimeStamp) {
+            //NOTE: the server can get messages in the wrong sequence if they was sent with a little distance (several milliseconds),
+            // we don't take to account old messages
+            this.nativeDialogsInfoTimeStamp = msg.timeStamp;
+            this.nativeDialogsInfo          = msg.info;
+        }
+    }
 }
 
-// Service message handlers
-var ServiceMessages = LegacyTestRun.prototype;
-
-ServiceMessages[COMMAND.fatalError] = function (msg) {
-    return this._fatalError(msg.err);
-};
-
-ServiceMessages[COMMAND.assertionFailed] = function (msg) {
-    return this._addError(msg.err);
-};
-
-ServiceMessages[COMMAND.done] = function () {
-    this.emit('done');
-};
-
-ServiceMessages[COMMAND.setStepsSharedData] = function (msg) {
-    this.stepsSharedData = msg.stepsSharedData;
-};
-
-ServiceMessages[COMMAND.getStepsSharedData] = function () {
-    return this.stepsSharedData;
-};
-
-ServiceMessages[COMMAND.getAndUncheckFileDownloadingFlag] = function () {
-    var isFileDownloading = this.isFileDownloading;
-
-    this.isFileDownloading = false;
-
-    return isFileDownloading;
-};
-
-ServiceMessages[COMMAND.waitForFileDownload] = function () {
-    // NOTE: required to keep API similar to TestRun. Just do nothing here.
-};
-
-ServiceMessages[COMMAND.nativeDialogsInfoSet] = function (msg) {
-    if (msg.timeStamp >= this.nativeDialogsInfoTimeStamp) {
-        //NOTE: the server can get messages in the wrong sequence if they was sent with a little distance (several milliseconds),
-        // we don't take to account old messages
-        this.nativeDialogsInfoTimeStamp = msg.timeStamp;
-        this.nativeDialogsInfo          = msg.info;
-    }
-};
-
-ServiceMessages[COMMAND.takeScreenshot] = async function (msg) {
-    try {
-        return await this.screenshotCapturer.captureAction(msg);
-    }
-    catch (e) {
-        // NOTE: swallow the error silently if we can't take screenshots for some
-        // reason (e.g. we don't have permissions to write a screenshot file).
-        return null;
-    }
-
-};
+for (const handler of ASYNC_SERVICE_MESSAGE_HANDLERS)
+    LegacyTestRun.makeBlocking(LegacyTestRun.prototype, handler);
