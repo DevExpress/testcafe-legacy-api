@@ -17,6 +17,7 @@ import isJQueryObj from 'is-jquery-obj';
 var messageSandbox = hammerhead.eventSandbox.message;
 var nativeMethods  = hammerhead.nativeMethods;
 
+var RequestEmitter = testCafeCore.ClientRequestEmitter;
 var RequestBarrier = testCafeCore.RequestBarrier;
 var serviceUtils   = testCafeCore.serviceUtils;
 var domUtils       = testCafeCore.domUtils;
@@ -163,7 +164,9 @@ RunnerBase.prototype._destroy = function () {
 };
 
 RunnerBase.prototype._initBarrier = function () {
-    this.pageInitialRequestBarrier = new RequestBarrier({
+    var requestEmitter = new RequestEmitter();
+
+    this.pageInitialRequestBarrier = new RequestBarrier(requestEmitter, {
         requestsCollection:           SETTINGS.get().REQUESTS_COLLECTION_DELAY,
         additionalRequestsCollection: SETTINGS.get().ADDITIONAL_REQUESTS_COLLECTION_DELAY
     });

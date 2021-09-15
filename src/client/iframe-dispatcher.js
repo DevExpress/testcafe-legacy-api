@@ -10,9 +10,9 @@ import SETTINGS from './settings';
 var Promise        = hammerhead.Promise;
 var messageSandbox = hammerhead.eventSandbox.message;
 var nativeMethods  = hammerhead.nativeMethods;
+var RequestEmitter = testCafeCore.ClientRequestEmitter;
 var RequestBarrier = testCafeCore.RequestBarrier;
 var serviceUtils   = testCafeCore.serviceUtils;
-var domUtils       = testCafeCore.domUtils;
 var eventUtils     = testCafeCore.eventUtils;
 
 
@@ -104,7 +104,9 @@ if (window.top !== window) {
         .documentReady()
         .then(() => {
             if (!initialized) {
-                requestBarrier = new RequestBarrier({
+                const requestEmitter = new RequestEmitter();
+
+                requestBarrier = new RequestBarrier(requestEmitter, {
                     requestsCollection:           SETTINGS.get().REQUESTS_COLLECTION_DELAY,
                     additionalRequestsCollection: SETTINGS.get().ADDITIONAL_REQUESTS_COLLECTION_DELAY
                 });

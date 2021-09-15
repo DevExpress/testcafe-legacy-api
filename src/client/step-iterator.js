@@ -8,6 +8,7 @@ var browserUtils  = hammerhead.utils.browser;
 var JSON          = hammerhead.json;
 var nativeMethods = hammerhead.nativeMethods;
 
+var RequestEmitter    = testCafeCore.ClientRequestEmitter;
 var RequestBarrier    = testCafeCore.RequestBarrier;
 var pageUnloadBarrier = testCafeCore.pageUnloadBarrier;
 var serviceUtils      = testCafeCore.serviceUtils;
@@ -218,7 +219,8 @@ StepIterator.prototype._syncSharedDataWithServer = function (callback) {
 };
 
 StepIterator.prototype._waitActionSideEffectsCompletion = function (action, callback) {
-    var requestBarrier = new RequestBarrier({
+    var requestEmitter = new RequestEmitter();
+    var requestBarrier = new RequestBarrier(requestEmitter, {
         requestsCollection:           SETTINGS.get().REQUESTS_COLLECTION_DELAY,
         additionalRequestsCollection: SETTINGS.get().ADDITIONAL_REQUESTS_COLLECTION_DELAY
     });
@@ -319,8 +321,9 @@ StepIterator.prototype.asyncActionSeries = function (items, runArgumentsIterator
 
                             eventUtils.bind(iframe.contentWindow, 'beforeunload', onBeforeUnload);
 
-                            var IframeRequestBarrier = iframe.contentWindow[RequestBarrier.GLOBAL_REQUEST_BARRIER_FIELD];
-                            var iframeRequestBarrier = new IframeRequestBarrier({
+                            var IframeRequestEmitter = iframe.contentWindow['%testCafeCore%'].ClientRequestEmitter;
+                            var iframeClientEmitter  = new IframeRequestEmitter();
+                            var iframeRequestBarrier = new RequestBarrier(iframeClientEmitter, {
                                 requestsCollection:           SETTINGS.get().REQUESTS_COLLECTION_DELAY,
                                 additionalRequestsCollection: SETTINGS.get().ADDITIONAL_REQUESTS_COLLECTION_DELAY
                             });
