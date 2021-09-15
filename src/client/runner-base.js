@@ -17,12 +17,12 @@ import isJQueryObj from 'is-jquery-obj';
 var messageSandbox = hammerhead.eventSandbox.message;
 var nativeMethods  = hammerhead.nativeMethods;
 
-var ClientReqEmitter = testCafeCore.ClientReqEmitter;
-var RequestBarrier   = testCafeCore.RequestBarrier;
-var serviceUtils     = testCafeCore.serviceUtils;
-var domUtils         = testCafeCore.domUtils;
-var eventUtils       = testCafeCore.eventUtils;
-var JSON             = hammerhead.json;
+var RequestEmitter = testCafeCore.ClientRequestEmitter;
+var RequestBarrier = testCafeCore.RequestBarrier;
+var serviceUtils   = testCafeCore.serviceUtils;
+var domUtils       = testCafeCore.domUtils;
+var eventUtils     = testCafeCore.eventUtils;
+var JSON           = hammerhead.json;
 
 var modalBackground = testCafeUI.modalBackground;
 
@@ -164,7 +164,7 @@ RunnerBase.prototype._destroy = function () {
 };
 
 RunnerBase.prototype._initBarrier = function () {
-    var requestEmitter = new ClientReqEmitter();
+    var requestEmitter = new RequestEmitter();
 
     this.pageInitialRequestBarrier = new RequestBarrier(requestEmitter, {
         requestsCollection:           SETTINGS.get().REQUESTS_COLLECTION_DELAY,
