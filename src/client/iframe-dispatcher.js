@@ -7,13 +7,13 @@ import IFrameRunner from './iframe-runner';
 import CROSS_DOMAIN_MESSAGES from './cross-domain-messages';
 import SETTINGS from './settings';
 
-var Promise        = hammerhead.Promise;
-var messageSandbox = hammerhead.eventSandbox.message;
-var nativeMethods  = hammerhead.nativeMethods;
-var RequestBarrier = testCafeCore.RequestBarrier;
-var serviceUtils   = testCafeCore.serviceUtils;
-var domUtils       = testCafeCore.domUtils;
-var eventUtils     = testCafeCore.eventUtils;
+var Promise          = hammerhead.Promise;
+var messageSandbox   = hammerhead.eventSandbox.message;
+var nativeMethods    = hammerhead.nativeMethods;
+var ClientReqEmitter = testCafeCore.ClientReqEmitter;
+var RequestBarrier   = testCafeCore.RequestBarrier;
+var serviceUtils     = testCafeCore.serviceUtils;
+var eventUtils       = testCafeCore.eventUtils;
 
 
 var testRunInitializedCallback = null,
@@ -104,7 +104,9 @@ if (window.top !== window) {
         .documentReady()
         .then(() => {
             if (!initialized) {
-                requestBarrier = new RequestBarrier({
+                const requestEmitter = new ClientReqEmitter();
+
+                requestBarrier = new RequestBarrier(requestEmitter, {
                     requestsCollection:           SETTINGS.get().REQUESTS_COLLECTION_DELAY,
                     additionalRequestsCollection: SETTINGS.get().ADDITIONAL_REQUESTS_COLLECTION_DELAY
                 });
