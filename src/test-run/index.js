@@ -134,6 +134,9 @@ export default class LegacyTestRun extends Session {
         this.isFileDownloading = true;
     }
 
+    handleAttachment () {
+    }
+
     handlePageError (ctx, errMsg) {
         this._fatalError({
             type:    ERROR_TYPE.pageNotLoaded,
