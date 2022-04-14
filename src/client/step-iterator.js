@@ -1,6 +1,6 @@
 import hammerhead from './deps/hammerhead';
 import testCafeCore from './deps/testcafe-core';
-import async from './deps/async';
+import forEachSeries from './deps/for-each-series';
 import SETTINGS from './settings';
 import ERROR_TYPE from '../test-run-error/type';
 
@@ -291,7 +291,7 @@ StepIterator.prototype.asyncActionSeries = function (items, runArgumentsIterator
     iterator.state.inAsyncAction = true;
 
     var seriesActionsRun = function (elements, callback) {
-        async.forEachSeries(
+        forEachSeries(
             elements,
             function (element, asyncCallback) {
                 // NOTE: since v.14.1.5 it's recommended to run actions using the inIFrame function.

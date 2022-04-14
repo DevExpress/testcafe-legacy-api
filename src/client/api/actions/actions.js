@@ -14,7 +14,7 @@ import {
 import { getAutomations } from '../../automation-storage';
 import SETTINGS from '../../settings';
 import * as sourceIndexTracker from '../../source-index';
-import async from '../../deps/async';
+import forEachSeries from '../../deps/for-each-series';
 import * as sandboxedJQuery from '../../sandboxed-jquery';
 import ERROR_TYPE from '../../../test-run-error/type';
 import isJQueryObj from 'is-jquery-obj';
@@ -208,7 +208,7 @@ function actionArgumentsIterator (actionName) {
             failWithError(ERROR_TYPE.emptyFirstArgument, { action: actionName });
         }
         else {
-            async.forEachSeries(
+            forEachSeries(
                 items,
                 function (item, seriaCallback) {
                     iterate(item, seriaCallback);
