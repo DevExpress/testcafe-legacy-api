@@ -52,7 +52,11 @@ Runner.startHeartbeat = function (heartbeatUrl) {
 };
 
 Runner.checkStatus = function () {
-    browser.checkStatus(SETTINGS.get().BROWSER_STATUS_URL, hammerhead.createNativeXHR);
+    var urls = {
+        statusUrl: SETTINGS.get().BROWSER_STATUS_URL,
+    };
+
+    browser.checkStatus(urls, hammerhead.createNativeXHR);
 };
 
 
