@@ -8,7 +8,6 @@ import {
     ClickOptions,
     TypeOptions,
     calculateSelectTextArguments,
-    ERROR_TYPES as AUTOMATION_ERROR_TYPES
 } from '../../deps/testcafe-automation';
 
 import { getAutomations } from '../../automation-storage';
@@ -28,6 +27,7 @@ var styleUtils       = testCafeCore.styleUtils;
 var arrayUtils       = testCafeCore.arrayUtils;
 var parseKeySequence = testCafeCore.parseKeySequence;
 var selectElement    = testCafeUI.selectElement;
+var TEST_RUN_ERRORS  = testCafeCore.TEST_RUN_ERRORS;
 
 
 const ELEMENT_AVAILABILITY_WAITING_DELAY = 200;
@@ -79,7 +79,8 @@ function failWithError (type, additionalParams) {
 function failIfActionElementIsInvisible (err, type, element) {
     // NOTE: in case we couldn't find an element for event
     // simulation, we raise an error of this type (GH - 337)
-    if (err.message === AUTOMATION_ERROR_TYPES.elementIsInvisibleError) {
+    if (err.code === TEST_RUN_ERRORS.actionElementIsInvisibleError ||
+            err.code === TEST_RUN_ERRORS.actionAdditionalElementIsInvisibleError) {
         failWithError(ERROR_TYPE.invisibleActionElement, {
             element: domUtils.getElementDescription(element),
             action:  type
