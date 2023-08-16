@@ -15,9 +15,9 @@ function exists (filePath) {
     return new Promise(resolve => fs.exists(filePath, resolve));
 }
 
-const FIXTURE_RE = /(^|;|\s+)('|")@fixture\s+.+?\2/;
-const PAGE_RE    = /(^|;|\s+)('|")@page\s+.+?\2/;
-const TEST_RE    = /(^|;|\s+)('|")@test\2\s*\[('|").+?\3\]\s*=\s*\{/;
+const FIXTURE_RE = /(^|;|\s{1,100000})('|")@fixture\s+.{1,100000}?\2/;
+const PAGE_RE    = /(^|;|\s{1,100000})('|")@page\s+.{1,100000}?\2/;
+const TEST_RE    = /(^|;|\s{1,100000})('|")@test\2\s*\[('|").+?\3\]\s*=\s*\{/;
 
 export default class CompilerAdapter {
     constructor (hammerheadProcessScript) {
