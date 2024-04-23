@@ -48,7 +48,6 @@
     "async": "3.2.3",
     "dedent": "^0.6.0",
     "highlight-es": "^1.0.0",
-    "is-jquery-obj": "^0.1.0",
     "lodash": "^4.14.0",
     "moment": "^2.14.1",
     "mustache": "^2.2.1",

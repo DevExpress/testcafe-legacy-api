@@ -16,7 +16,7 @@ import * as sourceIndexTracker from '../../source-index';
 import forEachSeries from '../../deps/for-each-series';
 import * as sandboxedJQuery from '../../sandboxed-jquery';
 import ERROR_TYPE from '../../../test-run-error/type';
-import isJQueryObj from 'is-jquery-obj';
+import isJQueryObj from '../../../utils/is-jquery-obj';
 
 var nativeMethods = hammerhead.nativeMethods;
 
