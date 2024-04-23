@@ -1,6 +1,6 @@
 {
   "name": "testcafe-legacy-api",
-  "version": "5.1.7",
+  "version": "5.1.8",
   "description": "Legacy API support for TestCafe",
   "main": "lib/index.js",
   "scripts": {
@@ -48,7 +48,6 @@
     "async": "3.2.3",
     "dedent": "^0.6.0",
     "highlight-es": "^1.0.0",
-    "is-jquery-obj": "^0.1.0",
     "lodash": "^4.14.0",
     "moment": "^2.14.1",
     "mustache": "^2.2.1",

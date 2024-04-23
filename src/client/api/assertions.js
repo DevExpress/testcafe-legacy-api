@@ -4,7 +4,7 @@ import * as sourceIndexTracker from '../source-index';
 import SETTINGS from '../settings';
 import CROSS_DOMAIN_MESSAGES from '../cross-domain-messages';
 import ERROR_TYPE from '../../test-run-error/type';
-import isJQueryObj from 'is-jquery-obj';
+import isJQueryObj from '../../utils/is-jquery-obj';
 
 var messageSandbox = hammerhead.eventSandbox.message;
 

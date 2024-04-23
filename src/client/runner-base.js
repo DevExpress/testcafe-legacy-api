@@ -12,7 +12,7 @@ import COMMAND from '../test-run/command';
 import ERROR_TYPE from '../test-run-error/type';
 import * as sandboxedJQuery from './sandboxed-jquery';
 import * as transport from './transport';
-import isJQueryObj from 'is-jquery-obj';
+import isJQueryObj from '../utils/is-jquery-obj';
 
 var messageSandbox = hammerhead.eventSandbox.message;
 var nativeMethods  = hammerhead.nativeMethods;
