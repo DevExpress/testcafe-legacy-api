@@ -4,14 +4,12 @@ const path      = require('path');
 const del       = require('del');
 const gulp      = require('gulp');
 const gulpStep  = require('gulp-step');
-const gulpif    = require('gulp-if');
 const eslint    = require('gulp-eslint');
 const mocha     = require('gulp-mocha-simple');
 const mustache  = require('gulp-mustache');
 const ll        = require('gulp-ll-next');
 const rename    = require('gulp-rename');
 const uglify    = require('gulp-uglify');
-const util      = require('gulp-util');
 
 gulpStep.install();
 
@@ -62,7 +60,7 @@ gulp.step('client-scripts-template-render', () => {
         .src(script.wrapper)
         .pipe(mustache({ source: fs.readFileSync(script.src).toString() }))
         .pipe(rename(path.basename(script.src)))
-        .pipe(gulpif(!util.env.dev, uglify()))
+        .pipe(uglify())
         .pipe(gulp.dest(path.dirname(script.src)));
 });
 
