@@ -28,7 +28,7 @@
     "@testcafe/publish-please": "^5.6.0",
     "chai": "^3.4.1",
     "del": "^3.0.0",
-    "gulp": "^4.0.0",
+    "gulp": "^5.0.0",
     "gulp-eslint": "^5.0.0",
     "gulp-ll-next": "^2.1.0",
     "gulp-mocha-simple": "^2.0.0",
