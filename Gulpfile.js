@@ -46,11 +46,11 @@ gulp.step('templates', () => {
 });
 
 gulp.step('server-scripts', () => {
-    return spawn('npx tsc -p src/tsconfig.json', { shell: true, stdio: 'inherit' });
+    return spawn('npx --no-install tsc -p src/tsconfig.json', { shell: true, stdio: 'inherit' });
 });
 
 gulp.step('client-scripts-bundle', () => {
-    return spawn('npx rollup -c', { shell: true, stdio: 'inherit', cwd: path.join(__dirname, 'src/client') });
+    return spawn('npx --no-install rollup -c', { shell: true, stdio: 'inherit', cwd: path.join(__dirname, 'src/client') });
 });
 
 gulp.step('client-scripts-template-render', () => {
